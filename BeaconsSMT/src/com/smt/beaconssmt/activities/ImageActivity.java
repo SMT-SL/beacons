@@ -1,7 +1,8 @@
-package com.smt.beaconssmt;
+package com.smt.beaconssmt.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import com.smt.beaconssmt.R;
 
 public class ImageActivity extends Activity {
 

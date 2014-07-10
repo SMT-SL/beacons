@@ -185,19 +185,14 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
-    	AlertDialog.Builder builder;
-    	AlertDialog dialog;
     	
         switch (item.getItemId()) {
             
             case R.id.action_profile:
-            	builder = new AlertDialog.Builder(MainActivity.this);
-
-      			builder.setMessage("Ir al perfil...");
-
-      			dialog = builder.create();
       			
-      			dialog.show();
+      			Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+      			startActivity(i);
+      			
                 return true;
             case R.id.action_logout:
       			
@@ -211,6 +206,9 @@ public class MainActivity extends Activity {
       		    SharedPreferences.Editor editor = settings.edit();
       		    editor.putString("username", user);
       		    editor.commit();
+      		    
+      		    AlertDialog.Builder builder;
+      		  	AlertDialog dialog;
       		    
       		    builder = new AlertDialog.Builder(MainActivity.this);
 

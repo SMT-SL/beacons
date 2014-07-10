@@ -20,7 +20,7 @@ import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.BeaconManager.RangingListener;
 import com.estimote.sdk.Region;
 import com.estimote.sdk.Utils.Proximity;
-import com.smt.beaconssmt.ImageActivity;
+import com.smt.beaconssmt.activities.ImageActivity;
 import com.smt.beaconssmt.activities.MainActivity;
 import com.smt.beaconssmt.activities.WebViewActivity;
 import com.smt.beaconssmt.utils.BeaconsApp;

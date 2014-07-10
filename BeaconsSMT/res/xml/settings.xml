@@ -1,18 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <PreferenceCategory 
-        android:title="Profile"
-        android:key="pref_key_storage_settings">
-<!--    <CheckBoxPreference
-            android:key="pref_key_auto_delete"
-            android:summary="@string/pref_summary_auto_delete"
-            android:title="@string/pref_title_auto_delete"
-            android:defaultValue="false"/>
+        android:title="Perfil de usuario"
+        android:key="pref_key_profile_settings">
+        
+        <EditTextPreference
+            android:key="pref_key_nickname"
+            android:summary="Introduce aquí tu nombre de usuario"
+            android:title="Nickname"/>
+        
+        <EditTextPreference
+            android:key="pref_key_email"
+            android:summary="Introduce aquí tu email"
+            android:title="User Email"/>
+        
+        <EditTextPreference
+            android:key="pref_key_pass"
+            android:summary="Introduce aquí tu contraseña"
+            android:title="Pass"/>
+
+    </PreferenceCategory>
+    <PreferenceCategory 
+        android:title="Otras"
+        android:key="pref_key_other_settings">
+        
         <Preference 
             android:key="pref_key_sms_delete_limit"
             android:dependency="pref_key_auto_delete"
-            android:summary="@string/pref_summary_delete_limit"
-            android:title="@string/pref_title_sms_delete"/>
--->
+            android:summary="Summary 1"
+            android:title="Title 1"/>
+            
+         <CheckBoxPreference
+            android:key="pref_key_auto_delete"
+            android:summary="Descripcion probando preferencias"
+            android:title="Otra preferencia"
+            android:defaultValue="false"/>
+
     </PreferenceCategory>
 </PreferenceScreen>

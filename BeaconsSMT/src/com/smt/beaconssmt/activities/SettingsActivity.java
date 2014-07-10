@@ -1,16 +1,18 @@
-package com.smt.beaconssmt;
+package com.smt.beaconssmt.activities;
+
+import com.smt.beaconssmt.R;
+import com.smt.beaconssmt.R.layout;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.xml.settings);
+		setContentView(R.layout.activity_settings);
 	}
 }
