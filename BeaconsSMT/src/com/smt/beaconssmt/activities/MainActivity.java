@@ -227,7 +227,7 @@ public class MainActivity extends Activity {
     				e.printStackTrace();
     			}
     			
-      		    System.exit(0);
+//      		System.exit(0);
       			
                 return true;
             default:
@@ -249,7 +249,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			// TODO Auto-generated method stub
-
+			System.exit(0);
 		}
     };
     

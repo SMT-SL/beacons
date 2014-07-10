@@ -203,9 +203,7 @@ public class BeaconsMonitoringService extends Service{
 	       	  	nManager.notify(2, noti);
 			}
    		 	
-   	  		noti.defaults = Notification.DEFAULT_VIBRATE;
-   	  		noti.defaults = Notification.DEFAULT_LIGHTS;
-   	  		noti.defaults = Notification.DEFAULT_SOUND;
+   	  		noti.defaults = Notification.DEFAULT_ALL;
        	  		
 		}
 	  
@@ -221,9 +219,7 @@ public class BeaconsMonitoringService extends Service{
 	         .setContentIntent(contentIntent)
 	         .getNotification();
  		 
-     	  	noti.defaults = Notification.DEFAULT_VIBRATE;
-     	  	noti.defaults = Notification.DEFAULT_LIGHTS;
-   	  		noti.defaults = Notification.DEFAULT_SOUND;
+     	  	noti.defaults = Notification.DEFAULT_ALL;
      	  	
      	  	NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
      	  	nManager.notify(1, noti);
