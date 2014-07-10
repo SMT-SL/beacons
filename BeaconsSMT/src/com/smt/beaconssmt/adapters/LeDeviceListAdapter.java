@@ -1,5 +1,8 @@
 package com.smt.beaconssmt.adapters;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +13,6 @@ import android.widget.TextView;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Utils;
 import com.smt.beaconssmt.R;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 
 
 /**

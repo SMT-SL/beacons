@@ -56,6 +56,10 @@
             android:name="com.smt.beaconssmt.ImageActivity"
             android:label="@string/title_activity_image" >
         </activity>
+        <activity
+            android:name="com.smt.beaconssmt.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
     </application>
 
 </manifest>

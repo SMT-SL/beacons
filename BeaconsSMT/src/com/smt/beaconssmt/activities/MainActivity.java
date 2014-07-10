@@ -6,14 +6,11 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -86,7 +83,6 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(MainActivity.this, BeaconsMonitoringService.class);
-//				intent.putExtra("user", user);
 				startService(intent);
 				System.exit(0);
 			}
@@ -205,13 +201,16 @@ public class MainActivity extends Activity {
                 return true;
             case R.id.action_logout:
       			
-      			Intent intent = new Intent(MainActivity.this, BeaconsMonitoringService.class);
-      		    bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+//      			Intent intent = new Intent(MainActivity.this, BeaconsMonitoringService.class);
+//      		    bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            	
+            	Intent intent = new Intent(MainActivity.this, BeaconsMonitoringService.class);
+				stopService(intent);
       		    
       		    SharedPreferences settings = getSharedPreferences(BeaconsApp.PREFS_NAME, 0);
       		    SharedPreferences.Editor editor = settings.edit();
-    	      
       		    editor.putString("username", user);
+      		    editor.commit();
       		    
       		    builder = new AlertDialog.Builder(MainActivity.this);
 
@@ -221,13 +220,9 @@ public class MainActivity extends Activity {
     			
     			dialog.show();
       		    
-    			try {
-    				wait(1000);
-    			} catch (InterruptedException e) {
-    				e.printStackTrace();
-    			}
+    			SystemClock.sleep(1000);
     			
-//      		System.exit(0);
+    			System.exit(0);
       			
                 return true;
             default:
@@ -235,23 +230,23 @@ public class MainActivity extends Activity {
         }
     }
     
-    BeaconsMonitoringService localService;
-    private ServiceConnection mConnection = new ServiceConnection() {
-
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			// TODO Auto-generated method stub
-			BeaconsMonitoringService binder = (BeaconsMonitoringService) service;
-			binder.stopSelf();
-
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			// TODO Auto-generated method stub
-			System.exit(0);
-		}
-    };
+//    BeaconsMonitoringService localService;
+//    private ServiceConnection mConnection = new ServiceConnection() {
+//
+//		@Override
+//		public void onServiceConnected(ComponentName name, IBinder service) {
+//			// TODO Auto-generated method stub
+//			BeaconsMonitoringService binder = (BeaconsMonitoringService) service;
+//			binder.stopSelf();
+//
+//		}
+//
+//		@Override
+//		public void onServiceDisconnected(ComponentName name) {
+//			// TODO Auto-generated method stub
+////			System.exit(0);
+//		}
+//    };
     
     
 

@@ -168,6 +168,9 @@ public class BeaconsMonitoringService extends Service{
 		         .setContentTitle("Felicidades "+user+"!")
 		         .setContentText("Has ganado 2 entradas para el Coca-Cola Music Xperience sólo por estar aquí")
 		         .setSmallIcon(com.smt.beaconssmt.R.drawable.beacon_gray)
+		         .setOnlyAlertOnce(true)
+		         .setAutoCancel(true)
+		         .setDefaults(Notification.DEFAULT_ALL)
 		         .setContentIntent(contentIntent)
 		         .getNotification();
 	       	  	
@@ -182,6 +185,9 @@ public class BeaconsMonitoringService extends Service{
 		         .setContentTitle("Bienvenido "+user+"!")
 		         .setContentText("Vente al curso de peluquería de L'Oreal al que Coca-Cola y Bacardi te invitan en la sala 5")
 		         .setSmallIcon(com.smt.beaconssmt.R.drawable.beacon_gray)
+		         .setOnlyAlertOnce(true)
+		         .setAutoCancel(true)
+		         .setDefaults(Notification.DEFAULT_ALL)
 		         .setContentIntent(contentIntent)
 		         .getNotification();
 	       	  	
@@ -198,12 +204,13 @@ public class BeaconsMonitoringService extends Service{
 		         .setContentText("Hoy, con tu Coca-Cola light + Bacardi Blanco te invitamos a hacerte un peinado de trenzas en la zona de la piscina")
 		         .setSmallIcon(com.smt.beaconssmt.R.drawable.beacon_gray)
 		         .setContentIntent(contentIntent)
+		         .setOnlyAlertOnce(true)
+		         .setAutoCancel(true)
+		         .setDefaults(Notification.DEFAULT_ALL)
 		         .getNotification();
 	       	  	
-	       	  	nManager.notify(2, noti);
+	       	  	nManager.notify(3, noti);
 			}
-   		 	
-   	  		noti.defaults = Notification.DEFAULT_ALL;
        	  		
 		}
 	  

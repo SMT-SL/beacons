@@ -4,8 +4,7 @@ import com.smt.beaconssmt.R;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.webkit.WebView;
 
 public class WebViewActivity extends Activity {
 
@@ -13,5 +12,11 @@ public class WebViewActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_web_view);
+		
+		String web = getIntent().getStringExtra("web");
+		
+		WebView webview = (WebView)findViewById(R.id.webView1);
+		webview.loadUrl(web);
+
 	}
 }

@@ -6,5 +6,6 @@
     <string name="title_activity_web_view">WebViewActivity</string>
     <string name="title_activity_beacon_data">BeaconDataActivity</string>
     <string name="title_activity_image">ImageActivity</string>
+    <string name="title_activity_settings">Settings</string>
 
 </resources>

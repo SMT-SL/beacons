@@ -1,8 +1,5 @@
 package com.smt.beaconssmt.activities;
 
-import com.smt.beaconssmt.R;
-import com.smt.beaconssmt.utils.BeaconsApp;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -13,11 +10,13 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.smt.beaconssmt.R;
+import com.smt.beaconssmt.utils.BeaconsApp;
 
 public class LoginActivity extends Activity {
 	
