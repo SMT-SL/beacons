@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -46,9 +47,6 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-//		Intent intent = getIntent();
-//		user = intent.getStringExtra("user");
-		
 		SharedPreferences settings = getSharedPreferences(BeaconsApp.PREFS_NAME, 0);
 	    user = settings.getString("username", "");
 		Toast.makeText(this, "Bienvenido "+user+"!", Toast.LENGTH_SHORT).show();
@@ -61,6 +59,9 @@ public class MainActivity extends Activity {
         
         // Configure BeaconManager.
         beaconManager = new BeaconManager(this);
+//        BeaconsApp appState = (BeaconsApp)this.getApplication();
+//        beaconManager = appState.getBm();
+        
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
           @Override
           public void onBeaconsDiscovered(Region region, final List<Beacon> beacons) {
@@ -70,7 +71,7 @@ public class MainActivity extends Activity {
               public void run() {
                 // Note that beacons reported here are already sorted by estimated
                 // distance between device and beacon.
-                getActionBar().setSubtitle("Found beacons: " + beacons.size());
+                getActionBar().setSubtitle("Beacons encontrados: " + beacons.size());
                 adapter.replaceWith(beacons);
               }
             });
@@ -82,21 +83,23 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this, BeaconsMonitoringService.class);
+				Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
 				startService(intent);
 				System.exit(0);
 			}
 		});
         
 	}
-	
+
+
+
 	@Override
     protected void onStart() {
       super.onStart();
 
       // Check if device supports Bluetooth Low Energy.
       if (!beaconManager.hasBluetooth()) {
-        Toast.makeText(this, "Device does not have Bluetooth Low Energy", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "El dispositivo no soporta Bluetooth Low Energy, los beacons no serán detectados", Toast.LENGTH_LONG).show();
         return;
       }
 
@@ -114,6 +117,7 @@ public class MainActivity extends Activity {
     protected void onStop() {
     	try {
 			beaconManager.stopRanging(ALL_ESTIMOTE_BEACONS_REGION);
+			
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -124,7 +128,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
       super.onResume();
 //      connectToService();
-      connectToMonitoringService();
+          connectToMonitoringService();
     }
     
     @Override
@@ -134,8 +138,8 @@ public class MainActivity extends Activity {
 //          connectToService();
         	connectToMonitoringService();
         } else {
-          Toast.makeText(this, "Bluetooth not enabled", Toast.LENGTH_LONG).show();
-          getActionBar().setSubtitle("Bluetooth not enabled");
+          Toast.makeText(this, "Bluetooth no activado", Toast.LENGTH_LONG).show();
+          getActionBar().setSubtitle("Bluetooth no activado");
         }
       }
       super.onActivityResult(requestCode, resultCode, data);
@@ -148,7 +152,7 @@ public class MainActivity extends Activity {
     }
     
     private void connectToMonitoringService() {
-        getActionBar().setSubtitle("Scanning...");
+        getActionBar().setSubtitle("Buscando...");
         adapter.replaceWith(Collections.<Beacon>emptyList());
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
           @Override
@@ -204,21 +208,13 @@ public class MainActivity extends Activity {
       		    
       		    SharedPreferences settings = getSharedPreferences(BeaconsApp.PREFS_NAME, 0);
       		    SharedPreferences.Editor editor = settings.edit();
-      		    editor.putString("username", user);
+      		    editor.putString("username", "");
       		    editor.commit();
       		    
-      		    AlertDialog.Builder builder;
-      		  	AlertDialog dialog;
+      		    Toast.makeText(this, "Hasta pronto "+user+"!", Toast.LENGTH_SHORT).show();
       		    
-      		    builder = new AlertDialog.Builder(MainActivity.this);
-
-    			builder.setMessage("Acabas de cerrar sesión");
-
-    			dialog = builder.create();
-    			
-    			dialog.show();
-      		    
-    			SystemClock.sleep(1000);
+      		    //Simulamos el tiempo de conexión al servidor...
+    			SystemClock.sleep(500);
     			
     			System.exit(0);
       			

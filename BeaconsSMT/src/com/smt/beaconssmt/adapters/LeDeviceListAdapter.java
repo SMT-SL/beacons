@@ -3,16 +3,22 @@ package com.smt.beaconssmt.adapters;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Utils;
 import com.smt.beaconssmt.R;
+import com.smt.beaconssmt.activities.ImageActivity;
+import com.smt.beaconssmt.activities.WebViewActivity;
 
 
 /**
@@ -60,7 +66,17 @@ public class LeDeviceListAdapter extends BaseAdapter {
 
   private void bind(Beacon beacon, View view) {
     ViewHolder holder = (ViewHolder) view.getTag();
-    holder.macTextView.setText(String.format("MAC: %s (%.2fm)", beacon.getMacAddress(), Utils.computeAccuracy(beacon)));
+    if (beacon.getMinor() == 64444){
+    	holder.beaconImageView.setImageResource(R.drawable.beacon_blue);
+    	holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Has ganado 2 entradas para el Coca-Cola Music Xperience sólo por estar aquí'", Utils.computeAccuracy(beacon)));
+	} else if (beacon.getMinor() == 36328){
+		holder.beaconImageView.setImageResource(R.drawable.beacon_purple);
+		holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Vente al curso de peluquería de L'Oreal al que Coca-Cola y Bacardi te invitan en la sala 5'", Utils.computeAccuracy(beacon)));
+	} else if (beacon.getMinor() == 31394) {
+		holder.beaconImageView.setImageResource(R.drawable.beacon_green);
+		holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Hoy, con tu Coca-Cola light + Bacardi Blanco te invitamos a hacerte un peinado de trenzas en la zona de la piscina'", Utils.computeAccuracy(beacon)));
+	}
+//    holder.macTextView.setText(String.format("MAC: %s (%.2fm)", beacon.getMacAddress(), Utils.computeAccuracy(beacon)));
     holder.majorTextView.setText("Major: " + beacon.getMajor());
     holder.minorTextView.setText("Minor: " + beacon.getMinor());
     holder.measuredPowerTextView.setText("MPower: " + beacon.getMeasuredPower());
@@ -81,6 +97,7 @@ public class LeDeviceListAdapter extends BaseAdapter {
     final TextView minorTextView;
     final TextView measuredPowerTextView;
     final TextView rssiTextView;
+    final ImageView beaconImageView;
 
     ViewHolder(View view) {
       macTextView = (TextView) view.findViewWithTag("mac");
@@ -88,6 +105,7 @@ public class LeDeviceListAdapter extends BaseAdapter {
       minorTextView = (TextView) view.findViewWithTag("minor");
       measuredPowerTextView = (TextView) view.findViewWithTag("mpower");
       rssiTextView = (TextView) view.findViewWithTag("rssi");
+      beaconImageView = (ImageView) view.findViewWithTag("img");
     }
   }
 }

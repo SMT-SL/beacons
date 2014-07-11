@@ -5,7 +5,8 @@
               android:layout_height="wrap_content"
               android:orientation="horizontal">
 
-  <ImageView android:layout_width="60dp"
+  <ImageView android:tag="img"
+      		 android:layout_width="60dp"
              android:layout_height="80dp"
              android:layout_gravity="center_vertical"
              android:layout_marginRight="10dp"

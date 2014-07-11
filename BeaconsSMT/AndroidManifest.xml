@@ -29,7 +29,12 @@
         <service
             android:name="com.estimote.sdk.service.BeaconService"
             android:exported="false" />
-        <service android:name="com.smt.beaconssmt.services.BeaconsMonitoringService" />
+        <service android:name="com.smt.beaconssmt.services.BeaconsMonitoringService" 
+    		android:process=":remote">
+            <intent-filter> 
+				<action android:name="com.smt.beaconssmt.services.BeaconsMonitoringService"/> 
+			</intent-filter>
+      	</service>
 
         <activity
             android:name="com.smt.beaconssmt.activities.LoginActivity"

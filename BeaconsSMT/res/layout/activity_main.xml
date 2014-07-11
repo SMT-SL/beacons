@@ -19,7 +19,7 @@
         android:id="@+id/runInBackBtn"
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:text="Run app in background" 
+        android:text="Pasa a segundo plano y notifícame al encontrar beacons"
         android:layout_weight=".2"/>
 
 </LinearLayout>

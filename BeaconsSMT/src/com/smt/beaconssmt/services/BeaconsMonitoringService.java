@@ -216,20 +216,20 @@ public class BeaconsMonitoringService extends Service{
 	  
 	  public void notifyExitRegion(int code){
 			
-			Intent targetIntent = new Intent(this, MainActivity.class);
-     	  	PendingIntent contentIntent = PendingIntent.getActivity(this, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-     	  	
-     	  	Notification noti = new Notification.Builder(this)
-	         .setContentTitle("Hasta pronto "+user+"!")
-	         .setContentText("Estas abandonando la zona del beacon "+code)
-	         .setSmallIcon(com.smt.beaconssmt.R.drawable.beacon_gray)
-	         .setContentIntent(contentIntent)
-	         .getNotification();
- 		 
-     	  	noti.defaults = Notification.DEFAULT_ALL;
-     	  	
-     	  	NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-     	  	nManager.notify(1, noti);
+//			Intent targetIntent = new Intent(this, MainActivity.class);
+//     	  	PendingIntent contentIntent = PendingIntent.getActivity(this, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//     	  	
+//     	  	Notification noti = new Notification.Builder(this)
+//	         .setContentTitle("Hasta pronto "+user+"!")
+//	         .setContentText("Estas abandonando la zona del beacon "+code)
+//	         .setSmallIcon(com.smt.beaconssmt.R.drawable.beacon_gray)
+//	         .setContentIntent(contentIntent)
+//	         .getNotification();
+// 		 
+//     	  	noti.defaults = Notification.DEFAULT_ALL;
+//     	  	
+//     	  	NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//     	  	nManager.notify(1, noti);
 	  }
 
 	  

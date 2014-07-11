@@ -136,6 +136,7 @@ public class BeaconDataActivity extends Activity {
 	          @Override public void run() {
 	            statusView.setText("Status: Connected to beacon");
 	            StringBuilder sb = new StringBuilder()
+	            	.append("MAC: ").append(beacon.getMacAddress()).append("\n")
 	                .append("Major: ").append(beacon.getMajor()).append("\n")
 	                .append("Minor: ").append(beacon.getMinor()).append("\n")
 	                .append("Advertising interval: ").append(beaconChars.getAdvertisingIntervalMillis()).append("ms\n")
