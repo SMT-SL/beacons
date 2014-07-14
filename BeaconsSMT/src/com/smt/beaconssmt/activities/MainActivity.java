@@ -4,9 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -32,8 +30,6 @@ import com.smt.beaconssmt.utils.BeaconsApp;
 
 
 public class MainActivity extends Activity {
-
-	private static final Region ALL_ESTIMOTE_BEACONS_REGION = new Region("rid", null, null, null);
 	
 	private BeaconManager beaconManager;
 	private LeDeviceListAdapter adapter;
@@ -58,9 +54,9 @@ public class MainActivity extends Activity {
         list.setOnItemClickListener(createOnItemClickListener());
         
         // Configure BeaconManager.
-        beaconManager = new BeaconManager(this);
-//        BeaconsApp appState = (BeaconsApp)this.getApplication();
-//        beaconManager = appState.getBm();
+//        beaconManager = new BeaconManager(this);
+        BeaconsApp appState = (BeaconsApp)this.getApplication();
+        beaconManager = appState.getBm();
         
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
           @Override
@@ -108,16 +104,25 @@ public class MainActivity extends Activity {
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         startActivityForResult(enableBtIntent, 1234);
       } else {
-//        connectToService();
-    	  connectToMonitoringService();
+    	  try {
+    		beaconManager.stopMonitoring(BeaconsApp.BEACONS_REGION_1);
+        	beaconManager.stopMonitoring(BeaconsApp.BEACONS_REGION_2);
+			beaconManager.stopMonitoring(BeaconsApp.BEACONS_REGION_3);
+    	  } catch (RemoteException e) {
+			e.printStackTrace();
+    	  }
+    	  connectToRangingService();
       }
+      
     }
 
     @Override
     protected void onStop() {
     	try {
-			beaconManager.stopRanging(ALL_ESTIMOTE_BEACONS_REGION);
-			
+			beaconManager.stopRanging(BeaconsApp.ALL_ESTIMOTE_BEACONS_REGION);
+			beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_1);
+        	beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_2);
+			beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_3);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -127,16 +132,28 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
       super.onResume();
-//      connectToService();
-          connectToMonitoringService();
+      try {
+    	beaconManager.stopMonitoring(BeaconsApp.BEACONS_REGION_1);
+      	beaconManager.stopMonitoring(BeaconsApp.BEACONS_REGION_2);
+		beaconManager.stopMonitoring(BeaconsApp.BEACONS_REGION_3);
+  	  } catch (RemoteException e) {
+			e.printStackTrace();
+  	  }
+      connectToRangingService();
     }
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       if (requestCode == 1234) {
         if (resultCode == Activity.RESULT_OK) {
-//          connectToService();
-        	connectToMonitoringService();
+        	try {
+        		beaconManager.stopMonitoring(BeaconsApp.BEACONS_REGION_1);
+            	beaconManager.stopMonitoring(BeaconsApp.BEACONS_REGION_2);
+    			beaconManager.stopMonitoring(BeaconsApp.BEACONS_REGION_3);
+        	} catch (RemoteException e) {
+    			e.printStackTrace();
+        	}
+        	connectToRangingService();
         } else {
           Toast.makeText(this, "Bluetooth no activado", Toast.LENGTH_LONG).show();
           getActionBar().setSubtitle("Bluetooth no activado");
@@ -147,18 +164,26 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-      beaconManager.disconnect();
+//      beaconManager.disconnect();
+    	try {
+			beaconManager.stopRanging(BeaconsApp.ALL_ESTIMOTE_BEACONS_REGION);
+			beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_1);
+        	beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_2);
+			beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_3);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
       super.onDestroy();
     }
     
-    private void connectToMonitoringService() {
+    private void connectToRangingService() {
         getActionBar().setSubtitle("Buscando...");
         adapter.replaceWith(Collections.<Beacon>emptyList());
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
           @Override
           public void onServiceReady() {
             try {
-              beaconManager.startRanging(ALL_ESTIMOTE_BEACONS_REGION);
+              beaconManager.startRanging(BeaconsApp.ALL_ESTIMOTE_BEACONS_REGION);
             } catch (RemoteException e) {
               Toast.makeText(MainActivity.this, "Cannot start ranging, something terrible happened",
                   Toast.LENGTH_LONG).show();
@@ -242,144 +267,4 @@ public class MainActivity extends Activity {
 //		}
 //    };
     
-    
-
-
-//  private void connectToService() {
-//    getActionBar().setSubtitle("Scanning...");
-//    adapter.replaceWith(Collections.<Beacon>emptyList());
-//    beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
-//      @Override
-//      public void onServiceReady() {
-////        try {
-//      	  beaconManager.setBackgroundScanPeriod(TimeUnit.SECONDS.toMillis(1), 0);
-//
-//            beaconManager.setMonitoringListener(new MonitoringListener() {
-//              @Override
-//              public void onEnteredRegion(Region region, List<Beacon> beacons) {
-//            	  Log.i("BEACOON ", String.valueOf(beacons.get(1).getMinor()));
-//            	  getActionBar().setSubtitle("Found beacons: " + beacons.size());
-//            	  adapter.replaceWith(beacons);
-//            	for (Beacon beacon: beacons){
-//            		Log.i("BEACOON ", String.valueOf(beacon.getMinor()));
-//            		if (beacon.getMinor() == 64444) {
-////            			postNotification("Entered Ushuaia region");
-//            			// 1. Instantiate an AlertDialog.Builder with its constructor
-//            			AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//
-//            			// 2. Chain together various setter methods to set the dialog characteristics
-//            			builder.setMessage("Bienvenido ***! Sólo por estar aquí has ganado 2 entradas para el Cocacola Music Xperience")
-//            			       .setTitle("Premio!");
-//            			
-//            			// Add the buttons
-//            			builder.setPositiveButton("OK. Vamos!", new DialogInterface.OnClickListener() {
-//            			           public void onClick(DialogInterface dialog, int id) {
-//            			               // User clicked OK button
-//            			        	   Intent i = new Intent(MainActivity.this, WebViewActivity.class);
-//            		                   i.putExtra("web", "http://www.ushuaiaibiza.com/");
-//            		                   startActivity(i);
-//            			           }
-//            			       });
-//            			builder.setNegativeButton("Ahora no, gracias", new DialogInterface.OnClickListener() {
-//            			           public void onClick(DialogInterface dialog, int id) {
-//            			               // User cancelled the dialog
-//            			           }
-//            			       });
-//
-//            			// 3. Get the AlertDialog from create()
-//            			AlertDialog dialog = builder.create();
-//            			
-//            			dialog.show();
-//            		} else if (beacon.getMinor() == 36328) {
-////            			postNotification("Entered SMT region");
-//            			// 1. Instantiate an AlertDialog.Builder with its constructor
-//            			AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//
-//            			// 2. Chain together various setter methods to set the dialog characteristics
-//            			builder.setMessage("Bienvenido a SMT, deseas ver nuestro video?")
-//            			       .setTitle("Hola!");
-//            			
-//            			// Add the buttons
-//            			builder.setPositiveButton("OK. Vamos!", new DialogInterface.OnClickListener() {
-//            			           public void onClick(DialogInterface dialog, int id) {
-//            			               // User clicked OK button
-//            			        	   Intent i = new Intent(MainActivity.this, WebViewActivity.class);
-//            		                   i.putExtra("web", "http://www.youtube.com/");
-//            		                   startActivity(i);
-//            			           }
-//            			       });
-//            			builder.setNegativeButton("Ahora no, gracias", new DialogInterface.OnClickListener() {
-//            			           public void onClick(DialogInterface dialog, int id) {
-//            			               // User cancelled the dialog
-//            			           }
-//            			       });
-//
-//            			// 3. Get the AlertDialog from create()
-//            			AlertDialog dialog = builder.create();
-//            			
-//            			dialog.show();
-//            		} else if (beacon.getMinor() == 31394) {
-////            			postNotification("Entered SMT2 region");
-//            			// 1. Instantiate an AlertDialog.Builder with its constructor
-//            			AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//
-//            			// 2. Chain together various setter methods to set the dialog characteristics
-//            			builder.setMessage("Bienvenido a Ushuaia Ibiza, si te acercas a la sala 5 tendrás un curso de peluquería gratuito")
-//            			       .setTitle("Hola!");
-//            			
-//            			// Add the buttons
-//            			builder.setPositiveButton("OK. Vamos!", new DialogInterface.OnClickListener() {
-//            			           public void onClick(DialogInterface dialog, int id) {
-//            			               // User clicked OK button
-//            			        	   Intent i = new Intent(MainActivity.this, WebViewActivity.class);
-//            		                   i.putExtra("web", "http://www.ushuaiaibiza.com/");
-//            		                   startActivity(i);
-//            			           }
-//            			       });
-//            			builder.setNegativeButton("Ahora no, gracias", new DialogInterface.OnClickListener() {
-//            			           public void onClick(DialogInterface dialog, int id) {
-//            			               // User cancelled the dialog
-//            			           }
-//            			       });
-//
-//            			// 3. Get the AlertDialog from create()
-//            			AlertDialog dialog = builder.create();
-//            			
-//            			dialog.show();
-//            		}
-//            	}
-//              }
-//
-//              @Override
-//              public void onExitedRegion(Region region) {
-////                postNotification("Exited region");
-//        			AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//
-//        			builder.setMessage("Hasta pronto!")
-//        			       .setTitle("Adios!");
-//        			
-//        			builder.setPositiveButton("Ver web", new DialogInterface.OnClickListener() {
-//        			           public void onClick(DialogInterface dialog, int id) {
-//        			               // User clicked OK button
-//        			        	   Intent i = new Intent(MainActivity.this, WebViewActivity.class);
-//        		                   i.putExtra("web", "http://www.ushuaiaibiza.com/");
-//        		                   startActivity(i);
-//        			           }
-//        			       });
-//        			builder.setNegativeButton("Adios!", new DialogInterface.OnClickListener() {
-//        			           public void onClick(DialogInterface dialog, int id) {
-//        			               // User cancelled the dialog
-//        			           }
-//        			       });
-//
-//        			AlertDialog dialog = builder.create();
-//        			
-//        			dialog.show();
-//              }
-//            });  
-//      
-//      }
-//    });
-//  }
-	
 }

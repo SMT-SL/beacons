@@ -12,10 +12,11 @@
         android:layout_weight="1.01"
         android:src="@drawable/planodiscobombaibiza" />
 
-    <Button
+<!--    <Button
         android:id="@+id/button1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Button" />
+        -->
 
 </LinearLayout>

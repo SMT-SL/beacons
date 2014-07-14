@@ -3,10 +3,7 @@ package com.smt.beaconssmt.adapters;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +14,6 @@ import android.widget.TextView;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Utils;
 import com.smt.beaconssmt.R;
-import com.smt.beaconssmt.activities.ImageActivity;
-import com.smt.beaconssmt.activities.WebViewActivity;
 
 
 /**

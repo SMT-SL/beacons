@@ -17,20 +17,18 @@ import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
-import com.estimote.sdk.BeaconManager.RangingListener;
+import com.estimote.sdk.BeaconManager.MonitoringListener;
 import com.estimote.sdk.Region;
-import com.estimote.sdk.Utils.Proximity;
+import com.smt.beaconssmt.activities.BeaconDataActivity;
 import com.smt.beaconssmt.activities.ImageActivity;
 import com.smt.beaconssmt.activities.MainActivity;
 import com.smt.beaconssmt.activities.WebViewActivity;
 import com.smt.beaconssmt.utils.BeaconsApp;
-import com.smt.beaconssmt.utils.Utils;
 
 public class BeaconsMonitoringService extends Service{
 	
-	private static final Region ALL_ESTIMOTE_BEACONS_REGION = new Region("rid", null, null, null);
-	
 	private BeaconManager beaconManager;
+//	private List<Beacon> beaconsNear;
 	
 	private String user;
 	
@@ -40,6 +38,7 @@ public class BeaconsMonitoringService extends Service{
 //        beaconManager = new BeaconManager(this);
         BeaconsApp appState = (BeaconsApp)this.getApplication();
         beaconManager = appState.getBm();
+//        beaconsNear = new ArrayList<Beacon>();
         
 	  }
 
@@ -47,7 +46,6 @@ public class BeaconsMonitoringService extends Service{
 	  public int onStartCommand(Intent intent, int flags, int startId) {
 	      Toast.makeText(this, "Beacons monitoring service starting", Toast.LENGTH_SHORT).show();
 	      
-//		  user = intent.getStringExtra("user");
 	      SharedPreferences settings = getSharedPreferences(BeaconsApp.PREFS_NAME, 0);
 		  user = settings.getString("username", "");
 
@@ -76,75 +74,68 @@ public class BeaconsMonitoringService extends Service{
 	  
 	  private void connectToService() {
 		  
-//	      beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
-//	    	  
-//	        @Override
-//	        public void onServiceReady() {
-//	        	notifyEnterRegion(0);
-//	          try {
-		  
 		  
 	        	  beaconManager.setBackgroundScanPeriod(TimeUnit.SECONDS.toMillis(1), 0);
 	        	  
-	        	  beaconManager.setRangingListener(new RangingListener() {
-	        		  
-	                  @Override
-	                  public void onBeaconsDiscovered(Region paramRegion, List<Beacon> paramList) {
-	                      if (paramList != null && !paramList.isEmpty()) {
-	                          Beacon beacon = paramList.get(0);
-	                          Proximity proximity = Utils.computeProximity(beacon);
-	                          if (proximity == Proximity.IMMEDIATE) {
-	                        	  notifyEnterRegion(beacon.getMinor());
-	                          } else if (proximity == Proximity.FAR) {
-	                              notifyExitRegion(beacon.getMinor());
-	                          }
-	                      }
-	                  }
+	        	  beaconManager.setMonitoringListener(new MonitoringListener() {
+		                @Override
+		                public void onEnteredRegion(Region region, List<Beacon> beacons) {
+		              	  for (Beacon beacon: beacons){
+		              		Log.i("BEACOON ", String.valueOf(beacon.getMinor()));
+//		              		beaconsNear.add(beacon);
+		              		notifyEnterRegion(beacon.getMinor());
+		              	  }
+		                }
 
-	              });
+		                @Override
+		                public void onExitedRegion(Region region) {
+		                	
+		                	notifyExitRegion(region.getMinor());
+//		                	for (Beacon b:beaconsNear){
+//		                		if (b.getProximityUUID() == region.getProximityUUID() && b.getMajor() == region.getMajor() && b.getMinor() == region.getMinor()){
+//		                			beaconsNear.remove(b);
+//		                		}
+//		                	}
+		                	
+		                }
+		              });
+	        	  
+//	        	  beaconManager.setRangingListener(new RangingListener() {
+//	        		  
+//	                  @Override
+//	                  public void onBeaconsDiscovered(Region paramRegion, List<Beacon> paramList) {
+//	                      if (paramList != null && !paramList.isEmpty()) {
+//	                    	  for (Beacon b: paramList){
+////		                          Beacon beacon = paramList.get(0);
+//		                          Proximity proximity = Utils.computeProximity(b);
+//		                          if (proximity == Proximity.IMMEDIATE) {
+//		                        	  notifyEnterRegion(b.getMinor());
+//		                          } else if (proximity == Proximity.FAR) {
+//		                              notifyExitRegion(b.getMinor());
+//		                          }
+//	                    	  }
+//	                      }
+//	                  }
+//
+//	              });
 	        	  
 	        	  beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
 	                  @Override
 	                  public void onServiceReady() {
 	                      try {
-	                          Log.d("TAG", "connected");
+//	                          Log.d("TAG", "connected");
 //	                          for (Region region : BEACONS) {
-	                              beaconManager.startRanging(ALL_ESTIMOTE_BEACONS_REGION);
+//	                            beaconManager.startRanging(ALL_ESTIMOTE_BEACONS_REGION);
+//	                          	beaconManager.startMonitoring(ALL_ESTIMOTE_BEACONS_REGION);
+	                          	beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_1);
+	                          	beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_2);
+	                          	beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_3);
 //	                          }
 	                      } catch (RemoteException e) {
 	                          Log.d("TAG", "Error while starting monitoring");
 	                      }
 	                  }
 	              });
-//	              beaconManager.setMonitoringListener(new MonitoringListener() {
-//	                @Override
-//	                public void onEnteredRegion(Region region, List<Beacon> beacons) {
-//	              	  Log.i("BEACOON ", String.valueOf(beacons.get(1).getMinor()));
-//	              	for (Beacon beacon: beacons){
-//	              		Log.i("BEACOON ", String.valueOf(beacon.getMinor()));
-//	              		if (beacon.getMinor() == 64444) {
-//	              			
-//	              			notifyEnterRegion(6444);
-//	              			
-//	              		} else if (beacon.getMinor() == 36328) {
-//	              			
-//	              			notifyEnterRegion(36328);
-//	              			
-//	              		} else if (beacon.getMinor() == 31394) {
-//	              			
-//	              			notifyEnterRegion(31394);
-//	              			
-//	              		}
-//	              	}
-//	                }
-//
-//	                @Override
-//	                public void onExitedRegion(Region region) {
-//	                	
-//	                	notifyExitRegion();
-//	          			
-//	                }
-//	              });  
 	        
 //	        }
 //	      });
@@ -153,83 +144,109 @@ public class BeaconsMonitoringService extends Service{
 	  public void notifyEnterRegion(int code) {
 		  
 		  	Toast.makeText(this, "Beacon "+code, Toast.LENGTH_SHORT).show();
-		  	Intent targetIntent;
+		  	Intent targetIntent = null;
 		  	Notification noti = null;
    	  		NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+   	  		String notifTitle = null, notifText = null;
+   	  		int notifSmallIcon = 0, notifId = 0;
    	  		
-		  	
 			if (code == 64444){
 				
 				targetIntent = new Intent(this, WebViewActivity.class);
 				targetIntent.putExtra("web", "http://musicexperience.cocacola.es/");
-	       	  	PendingIntent contentIntent = PendingIntent.getActivity(this, 0, targetIntent, PendingIntent.FLAG_ONE_SHOT);
-	          
-	       	  	noti = new Notification.Builder(this)
-		         .setContentTitle("Felicidades "+user+"!")
-		         .setContentText("Has ganado 2 entradas para el Coca-Cola Music Xperience sólo por estar aquí")
-		         .setSmallIcon(com.smt.beaconssmt.R.drawable.beacon_gray)
-		         .setOnlyAlertOnce(true)
-		         .setAutoCancel(true)
-		         .setDefaults(Notification.DEFAULT_ALL)
-		         .setContentIntent(contentIntent)
-		         .getNotification();
-	       	  	
-	       	  	nManager.notify(1, noti);
+				
+				notifTitle = "Felicidades "+user+"!";
+				notifText = "Has ganado 2 entradas para el Coca-Cola Music Xperience sólo por estar aquí";
+	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_blue;
+	   	  		notifId = 1;
+	   	  		
+	   	  		nManager.cancel(11);
 	       	  	
 			} else if (code == 36328){
 				
 				targetIntent = new Intent(this, ImageActivity.class);
-	       	  	PendingIntent contentIntent = PendingIntent.getActivity(this, 0, targetIntent, PendingIntent.FLAG_ONE_SHOT);
-	          
-	       	  	noti = new Notification.Builder(this)
-		         .setContentTitle("Bienvenido "+user+"!")
-		         .setContentText("Vente al curso de peluquería de L'Oreal al que Coca-Cola y Bacardi te invitan en la sala 5")
-		         .setSmallIcon(com.smt.beaconssmt.R.drawable.beacon_gray)
-		         .setOnlyAlertOnce(true)
-		         .setAutoCancel(true)
-		         .setDefaults(Notification.DEFAULT_ALL)
-		         .setContentIntent(contentIntent)
-		         .getNotification();
-	       	  	
-	       	  	nManager.notify(2, noti);
+				targetIntent.putExtra("image", "planodiscobombaibiza");
+				
+				notifTitle = "Bienvenido "+user+"!";
+				notifText = "Vente al curso de peluquería de L'Oreal al que Coca-Cola y Bacardi te invitan en la sala 5";
+	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_purple;
+	   	  		notifId = 2;
+	   	  		
+	   	  		nManager.cancel(22);
 	       	  	
 			} else if (code == 31394) {
 				
 				targetIntent = new Intent(this, WebViewActivity.class);
 				targetIntent.putExtra("web", "http://www.bacardi.com/es/lda");
-	       	  	PendingIntent contentIntent = PendingIntent.getActivity(this, 0, targetIntent, PendingIntent.FLAG_ONE_SHOT);
-	          
-	       	  	noti = new Notification.Builder(this)
-		         .setContentTitle("Bienvenido "+user+"!")
-		         .setContentText("Hoy, con tu Coca-Cola light + Bacardi Blanco te invitamos a hacerte un peinado de trenzas en la zona de la piscina")
-		         .setSmallIcon(com.smt.beaconssmt.R.drawable.beacon_gray)
-		         .setContentIntent(contentIntent)
-		         .setOnlyAlertOnce(true)
-		         .setAutoCancel(true)
-		         .setDefaults(Notification.DEFAULT_ALL)
-		         .getNotification();
-	       	  	
-	       	  	nManager.notify(3, noti);
+				
+				notifTitle = "Bienvenido "+user+"!";
+				notifText = "Hoy, con tu Coca-Cola light + Bacardi Blanco te invitamos a hacerte un peinado de trenzas en la zona de la piscina";
+	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_green;
+	   	  		notifId = 3;
+	   	  		
+	   	  		nManager.cancel(33);
 			}
+			
+			PendingIntent contentIntent = PendingIntent.getActivity(this, 0, targetIntent, PendingIntent.FLAG_ONE_SHOT);
+	          
+       	  	noti = new Notification.Builder(this)
+	         .setContentTitle(notifTitle)
+	         .setContentText(notifText)
+	         .setSmallIcon(notifSmallIcon)
+	         .setOnlyAlertOnce(true)
+	         .setAutoCancel(true)
+	         .setDefaults(Notification.DEFAULT_ALL)
+	         .setContentIntent(contentIntent)
+	         .build();
+       	  	
+       	  	nManager.notify(notifId, noti);
        	  		
 		}
 	  
 	  public void notifyExitRegion(int code){
+ 		 
+     	  	Toast.makeText(this, "Saliendo de la zona Beacon "+code, Toast.LENGTH_SHORT).show();
+		  	Intent targetIntent = new Intent(BeaconsMonitoringService.this, ImageActivity.class);
+			targetIntent.putExtra("image", "beacons_exit_region");
+		  	Notification noti = null;
+   	  		NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+   	  		String notifTitle = "Hasta pronto "+user+"!", notifText = "Estas abandonando la zona del beacon "+code;
+   	  		int notifSmallIcon = 0, notifId = 0;
+   	  		
+			if (code == 64444){
+				
+	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_gray;
+	   	  		notifId = 11;
+	   	  		nManager.cancel(1);
+	       	  	
+			} else if (code == 36328){
+				
+	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_gray;
+	   	  		notifId = 22;
+	   	  		nManager.cancel(2);
+	       	  	
+			} else if (code == 31394) {
+				
+				notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_gray;
+	   	  		notifId = 33;
+	   	  		nManager.cancel(3);
+	   	  		
+			}
 			
-//			Intent targetIntent = new Intent(this, MainActivity.class);
-//     	  	PendingIntent contentIntent = PendingIntent.getActivity(this, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//     	  	
-//     	  	Notification noti = new Notification.Builder(this)
-//	         .setContentTitle("Hasta pronto "+user+"!")
-//	         .setContentText("Estas abandonando la zona del beacon "+code)
-//	         .setSmallIcon(com.smt.beaconssmt.R.drawable.beacon_gray)
-//	         .setContentIntent(contentIntent)
-//	         .getNotification();
-// 		 
-//     	  	noti.defaults = Notification.DEFAULT_ALL;
-//     	  	
-//     	  	NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//     	  	nManager.notify(1, noti);
+			PendingIntent contentIntent = PendingIntent.getActivity(this, 0, targetIntent, PendingIntent.FLAG_ONE_SHOT);
+	          
+       	  	noti = new Notification.Builder(this)
+	         .setContentTitle(notifTitle)
+	         .setContentText(notifText)
+	         .setSmallIcon(notifSmallIcon)
+	         .setOnlyAlertOnce(true)
+	         .setAutoCancel(true)
+	         .setDefaults(Notification.DEFAULT_ALL)
+	         .setContentIntent(contentIntent)
+	         .build();
+       	  	
+       	  	nManager.notify(notifId, noti);
+       	  	
 	  }
 
 	  

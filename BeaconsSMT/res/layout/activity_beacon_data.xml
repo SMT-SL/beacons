@@ -44,6 +44,12 @@
                 android:text="Update"/>
       </LinearLayout>
 
+      <Button
+          android:id="@+id/promoBtn"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="Ir a la promoción" />
+
     </LinearLayout>
 
   </LinearLayout>

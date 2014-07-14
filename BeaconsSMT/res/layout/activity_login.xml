@@ -26,56 +26,60 @@
             android:fontFamily="sans-serif-light"
             android:text="signing in.."
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/login_form"
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context="${packageName}.${activityClass}" >
-		
-        <ImageView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/whatsredlogo"/>
+        android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/textView1"
+        <LinearLayout
+            android:id="@+id/login_form"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:gravity="center"
-            android:text="BEACONS MODULE"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textStyle="bold" />
-        
-        <EditText
-            android:id="@+id/userEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Email"
-            android:inputType="textEmailAddress" >
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context="${packageName}.${activityClass}" >
 
-            <requestFocus />
-        </EditText>
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/whatsredlogo" />
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Password"
-            android:inputType="textPassword" />
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:gravity="center"
+                android:text="BEACONS MODULE"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/loginBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="Login" />
+            <EditText
+                android:id="@+id/userEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Email"
+                android:inputType="textEmailAddress" />
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/loginBtn"
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="Login" />
+        </LinearLayout>
+
+    </ScrollView>
 
 </merge>

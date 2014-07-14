@@ -5,10 +5,13 @@ import com.estimote.sdk.connection.BeaconConnection;
 import com.smt.beaconssmt.R;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +25,8 @@ public class BeaconDataActivity extends Activity {
 	  private TextView beaconDetailsView;
 	  private EditText minorEditView;
 	  private View afterConnectedView;
+	  
+	  private Button goToPromoBtn;
 
 	  @Override
 	  protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,37 @@ public class BeaconDataActivity extends Activity {
 	    beacon = getIntent().getParcelableExtra("beacon");
 	    connection = new BeaconConnection(this, beacon, createConnectionCallback());
 	    findViewById(R.id.update).setOnClickListener(createUpdateButtonListener());
+	    
+	    goToPromoBtn = (Button) findViewById(R.id.promoBtn);
+	    goToPromoBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String code = minorEditView.getText().toString();
+				if (code.equals("64444")){
+					
+					Intent targetIntent = new Intent(BeaconDataActivity.this, WebViewActivity.class);
+					targetIntent.putExtra("web", "http://musicexperience.cocacola.es/");
+					startActivity(targetIntent);
+		       	  	
+				} else if (code.equals("36328")){
+					
+					Intent targetIntent = new Intent(BeaconDataActivity.this, ImageActivity.class);
+					targetIntent.putExtra("image", "planodiscobombaibiza");
+					startActivity(targetIntent);
+		       	  	
+				} else if (code.equals("31394")) {
+					
+					Intent targetIntent = new Intent(BeaconDataActivity.this, WebViewActivity.class);
+					targetIntent.putExtra("web", "http://www.bacardi.com/es/lda");
+					startActivity(targetIntent);
+		   	  		
+				}
+				
+			}
+		});;
+	    
+	    
 	  }
 
 	  @Override
