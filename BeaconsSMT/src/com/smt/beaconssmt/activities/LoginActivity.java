@@ -199,6 +199,8 @@ public class LoginActivity extends Activity {
 
 		}
 		
+//		Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
+//		startService(intent);
 		Intent i = new Intent(LoginActivity.this, MainActivity.class);
 		startActivity(i);
 		this.finish();

@@ -10,6 +10,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
@@ -19,6 +21,7 @@ import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.BeaconManager.MonitoringListener;
 import com.estimote.sdk.Region;
+import com.smt.beaconssmt.R;
 import com.smt.beaconssmt.activities.BeaconDataActivity;
 import com.smt.beaconssmt.activities.ImageActivity;
 import com.smt.beaconssmt.activities.MainActivity;
@@ -149,6 +152,7 @@ public class BeaconsMonitoringService extends Service{
    	  		NotificationManager nManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
    	  		String notifTitle = null, notifText = null;
    	  		int notifSmallIcon = 0, notifId = 0;
+   	  		Bitmap notifBigIcon = null;
    	  		
 			if (code == 64444){
 				
@@ -158,6 +162,8 @@ public class BeaconsMonitoringService extends Service{
 				notifTitle = "Felicidades "+user+"!";
 				notifText = "Has ganado 2 entradas para el Coca-Cola Music Xperience sólo por estar aquí";
 	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_blue;
+	   	  	 notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
+		   	  	    	R.drawable.music_xperience);
 	   	  		notifId = 1;
 	   	  		
 	   	  		nManager.cancel(11);
@@ -170,6 +176,8 @@ public class BeaconsMonitoringService extends Service{
 				notifTitle = "Bienvenido "+user+"!";
 				notifText = "Vente al curso de peluquería de L'Oreal al que Coca-Cola y Bacardi te invitan en la sala 5";
 	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_purple;
+	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
+		   	  	    	R.drawable.loreal_paris);
 	   	  		notifId = 2;
 	   	  		
 	   	  		nManager.cancel(22);
@@ -182,6 +190,8 @@ public class BeaconsMonitoringService extends Service{
 				notifTitle = "Bienvenido "+user+"!";
 				notifText = "Hoy, con tu Coca-Cola light + Bacardi Blanco te invitamos a hacerte un peinado de trenzas en la zona de la piscina";
 	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_green;
+	   	  	    notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
+	   	  	    	R.drawable.bacardi_blanco);
 	   	  		notifId = 3;
 	   	  		
 	   	  		nManager.cancel(33);
@@ -197,6 +207,7 @@ public class BeaconsMonitoringService extends Service{
 	         .setAutoCancel(true)
 	         .setDefaults(Notification.DEFAULT_ALL)
 	         .setContentIntent(contentIntent)
+	         .setLargeIcon(notifBigIcon)
 	         .build();
        	  	
        	  	nManager.notify(notifId, noti);

@@ -90,6 +90,21 @@ public class MainActivity extends Activity {
 
 
 	@Override
+	protected void onPause() {
+		try {
+			beaconManager.stopRanging(BeaconsApp.ALL_ESTIMOTE_BEACONS_REGION);
+			beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_1);
+        	beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_2);
+			beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_3);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
+		super.onPause();
+	}
+
+
+
+	@Override
     protected void onStart() {
       super.onStart();
 

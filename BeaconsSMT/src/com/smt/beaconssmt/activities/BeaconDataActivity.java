@@ -6,6 +6,7 @@ import com.smt.beaconssmt.R;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +24,7 @@ public class BeaconDataActivity extends Activity {
 
 	  private TextView statusView;
 	  private TextView beaconDetailsView;
-	  private EditText minorEditView;
+//	  private EditText minorEditView;
 	  private View afterConnectedView;
 	  
 	  private Button goToPromoBtn;
@@ -36,41 +37,13 @@ public class BeaconDataActivity extends Activity {
 	    statusView = (TextView) findViewById(R.id.status);
 	    beaconDetailsView = (TextView) findViewById(R.id.beacon_details);
 	    afterConnectedView = findViewById(R.id.after_connected);
-	    minorEditView = (EditText) findViewById(R.id.minor);
+//	    minorEditView = (EditText) findViewById(R.id.minor);
 
 	    beacon = getIntent().getParcelableExtra("beacon");
 	    connection = new BeaconConnection(this, beacon, createConnectionCallback());
-	    findViewById(R.id.update).setOnClickListener(createUpdateButtonListener());
+//	    findViewById(R.id.update).setOnClickListener(createUpdateButtonListener());
 	    
 	    goToPromoBtn = (Button) findViewById(R.id.promoBtn);
-	    goToPromoBtn.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				String code = minorEditView.getText().toString();
-				if (code.equals("64444")){
-					
-					Intent targetIntent = new Intent(BeaconDataActivity.this, WebViewActivity.class);
-					targetIntent.putExtra("web", "http://musicexperience.cocacola.es/");
-					startActivity(targetIntent);
-		       	  	
-				} else if (code.equals("36328")){
-					
-					Intent targetIntent = new Intent(BeaconDataActivity.this, ImageActivity.class);
-					targetIntent.putExtra("image", "planodiscobombaibiza");
-					startActivity(targetIntent);
-		       	  	
-				} else if (code.equals("31394")) {
-					
-					Intent targetIntent = new Intent(BeaconDataActivity.this, WebViewActivity.class);
-					targetIntent.putExtra("web", "http://www.bacardi.com/es/lda");
-					startActivity(targetIntent);
-		   	  		
-				}
-				
-			}
-		});;
-	    
 	    
 	  }
 
@@ -119,51 +92,51 @@ public class BeaconDataActivity extends Activity {
 	   * Returns click listener on update minor button.
 	   * Triggers update minor value on the beacon.
 	   */
-	  private View.OnClickListener createUpdateButtonListener() {
-	    return new View.OnClickListener() {
-	      @Override public void onClick(View v) {
-	        int minor = parseMinorFromEditView();
-	        if (minor == -1) {
-	          showToast("Minor must be a number");
-	        } else {
-	          updateMinor(minor);
-	        }
-	      }
-	    };
-	  }
+//	  private View.OnClickListener createUpdateButtonListener() {
+//	    return new View.OnClickListener() {
+//	      @Override public void onClick(View v) {
+//	        int minor = parseMinorFromEditView();
+//	        if (minor == -1) {
+//	          showToast("Minor must be a number");
+//	        } else {
+//	          updateMinor(minor);
+//	        }
+//	      }
+//	    };
+//	  }
 
 	  /**
 	   * @return Parsed integer from edit text view or -1 if cannot be parsed.
 	   */
-	  private int parseMinorFromEditView() {
-	    try {
-	      return Integer.parseInt(String.valueOf(minorEditView.getText()));
-	    } catch (NumberFormatException e) {
-	      return -1;
-	    }
-	  }
+//	  private int parseMinorFromEditView() {
+//	    try {
+//	      return Integer.parseInt(String.valueOf(minorEditView.getText()));
+//	    } catch (NumberFormatException e) {
+//	      return -1;
+//	    }
+//	  }
 
-	  private void updateMinor(int minor) {
-	    // Minor value will be normalized if it is not in the range.
-	    // Minor should be 16-bit unsigned integer.
-	    connection.writeMinor(minor, new BeaconConnection.WriteCallback() {
-	      @Override public void onSuccess() {
-	        runOnUiThread(new Runnable() {
-	          @Override public void run() {
-	            showToast("Minor value updated");
-	          }
-	        });
-	      }
-
-	      @Override public void onError() {
-	        runOnUiThread(new Runnable() {
-	          @Override public void run() {
-	            showToast("Minor not updated");
-	          }
-	        });
-	      }
-	    });
-	  }
+//	  private void updateMinor(int minor) {
+//	    // Minor value will be normalized if it is not in the range.
+//	    // Minor should be 16-bit unsigned integer.
+//	    connection.writeMinor(minor, new BeaconConnection.WriteCallback() {
+//	      @Override public void onSuccess() {
+//	        runOnUiThread(new Runnable() {
+//	          @Override public void run() {
+//	            showToast("Minor value updated");
+//	          }
+//	        });
+//	      }
+//
+//	      @Override public void onError() {
+//	        runOnUiThread(new Runnable() {
+//	          @Override public void run() {
+//	            showToast("Minor not updated");
+//	          }
+//	        });
+//	      }
+//	    });
+//	  }
 
 	  private BeaconConnection.ConnectionCallback createConnectionCallback() {
 	    return new BeaconConnection.ConnectionCallback() {
@@ -177,10 +150,52 @@ public class BeaconDataActivity extends Activity {
 	                .append("Minor: ").append(beacon.getMinor()).append("\n")
 	                .append("Advertising interval: ").append(beaconChars.getAdvertisingIntervalMillis()).append("ms\n")
 	                .append("Broadcasting power: ").append(beaconChars.getBroadcastingPower()).append(" dBm\n")
-	                .append("Battery: ").append(beaconChars.getBatteryPercent()).append(" %");
+	                .append("Battery: ").append(beaconChars.getBatteryPercent()).append(" %\n\n");
+	            
+	            if (beacon.getMinor() == 64444){
+	            	
+	            	sb.append("Has ganado 2 entradas para el Coca-Cola Music Xperience sólo por estar aquí");
+					
+	            } else if (beacon.getMinor() == 36328){
+	            	
+	            	sb.append("Vente al curso de peluquería de L'Oreal al que Coca-Cola y Bacardi te invitan en la sala 5");
+		   	  		
+				} else if (beacon.getMinor() == 31394) {
+					
+					sb.append("Hoy, con tu Coca-Cola light + Bacardi Blanco te invitamos a hacerte un peinado de trenzas en la zona de la piscina");
+		   	  		
+				}
 	            beaconDetailsView.setText(sb.toString());
-	            minorEditView.setText(String.valueOf(beacon.getMinor()));
+//	            minorEditView.setText(String.valueOf(beacon.getMinor()));
 	            afterConnectedView.setVisibility(View.VISIBLE);
+	            
+	            goToPromoBtn.setOnClickListener(new OnClickListener() {
+	    			
+	    			@Override
+	    			public void onClick(View v) {
+	    				String code = String.valueOf(beacon.getMinor());
+	    				if (code.equals("64444")){
+	    					
+	    					Intent targetIntent = new Intent(BeaconDataActivity.this, WebViewActivity.class);
+	    					targetIntent.putExtra("web", "http://musicexperience.cocacola.es/");
+	    					startActivity(targetIntent);
+	    		       	  	
+	    				} else if (code.equals("36328")){
+	    					
+	    					Intent targetIntent = new Intent(BeaconDataActivity.this, ImageActivity.class);
+	    					targetIntent.putExtra("image", "planodiscobombaibiza");
+	    					startActivity(targetIntent);
+	    		       	  	
+	    				} else if (code.equals("31394")) {
+	    					
+	    					Intent targetIntent = new Intent(BeaconDataActivity.this, WebViewActivity.class);
+	    					targetIntent.putExtra("web", "http://www.bacardi.com/es/lda");
+	    					startActivity(targetIntent);
+	    		   	  		
+	    				}
+	    				
+	    			}
+	    		});;
 	          }
 	        });
 	      }

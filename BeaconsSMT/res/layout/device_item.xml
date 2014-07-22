@@ -3,7 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:orientation="horizontal">
+              android:orientation="horizontal"
+              android:background="#aacb060f">
 
   <ImageView android:tag="img"
       		 android:layout_width="60dp"
@@ -19,11 +20,12 @@
                 android:orientation="vertical">
 
     <TextView
-        android:tag="mac"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="Device Name"/>
+        android:tag="mac"
+        android:text="Device Name"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
 
     <LinearLayout android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
