@@ -2,6 +2,7 @@ package com.smt.beaconssmt.adapters;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Utils;
 import com.smt.beaconssmt.R;
+import com.smt.beaconssmt.activities.MainActivity;
 
 
 /**
@@ -60,16 +62,22 @@ public class LeDeviceListAdapter extends BaseAdapter {
   }
 
   private void bind(Beacon beacon, View view) {
+	  Date fecha = new Date();
     ViewHolder holder = (ViewHolder) view.getTag();
     if (beacon.getMinor() == 64444){
     	holder.beaconImageView.setImageResource(R.drawable.beacon_blue);
-    	holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Has ganado 2 entradas para el Coca-Cola Music Xperience sólo por estar aquí'", Utils.computeAccuracy(beacon)));
+    	holder.macTextView.setText(String.format("%s (%.2fm)","'Has ganado 2 entradas para el Coca-Cola Music Xperience sólo por estar aquí y ahora'", Utils.computeAccuracy(beacon)));
 	} else if (beacon.getMinor() == 36328){
-		holder.beaconImageView.setImageResource(R.drawable.beacon_purple);
-		holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Vente al curso de peluquería de L'Oreal al que Coca-Cola y Bacardi te invitan en la sala 5'", Utils.computeAccuracy(beacon)));
+//		holder.beaconImageView.setImageResource(R.drawable.beacon_purple);
+		holder.beaconImageView.setImageResource(R.drawable.realmadridbarcelona);
+//		holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Vente al curso de peluquería de L'Oreal al que Coca-Cola y Bacardi te invitan en la sala 5'", Utils.computeAccuracy(beacon)));
+		holder.macTextView.setText(String.format("%s (%.2fm)","Hola "+MainActivity.user+"! Son las "+fecha.getHours()+":"+fecha.getMinutes()+":"+fecha.getSeconds()+" y hoy, "+fecha.getDate()+" del "+fecha.getMonth()+", es el día del fútbol: \n \nParticipa en la porra del clásico Real Madrid - FC Barcelona en nuestro local, y podrás ganar premios alucinantes", Utils.computeAccuracy(beacon)));
 	} else if (beacon.getMinor() == 31394) {
-		holder.beaconImageView.setImageResource(R.drawable.beacon_green);
-		holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Hoy, con tu Coca-Cola light + Bacardi Blanco te invitamos a hacerte un peinado de trenzas en la zona de la piscina'", Utils.computeAccuracy(beacon)));
+//		holder.beaconImageView.setImageResource(R.drawable.beacon_green);
+		holder.beaconImageView.setImageResource(R.drawable.whatsredlogo);
+//		holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Hoy, con tu Coca-Cola light + Bacardi Blanco te invitamos a hacerte un peinado de trenzas en la zona de la piscina'", Utils.computeAccuracy(beacon)));
+//		holder.macTextView.setText(String.format("%s (%.2fm)","Hola "+MainActivity.user+"! Son las "+fecha.getHours()+":"+fecha.getMinutes()+":"+fecha.getSeconds()+" y hoy, "+fecha.getDate()+" del "+fecha.getMonth()+", es el día del fútbol: \n \nParticipa en la porra del clásico Real Madrid - FC Barcelona en nuestro local, y podrás ganar premios alucinantes", Utils.computeAccuracy(beacon)));
+		holder.macTextView.setText(String.format("%s (%.2fm)","Hola "+MainActivity.user+", descárgate Whats Red, tu nuevo asistente personal de ocio", Utils.computeAccuracy(beacon)));
 	}
 //    holder.macTextView.setText(String.format("MAC: %s (%.2fm)", beacon.getMacAddress(), Utils.computeAccuracy(beacon)));
     holder.majorTextView.setText("Major: " + beacon.getMajor());

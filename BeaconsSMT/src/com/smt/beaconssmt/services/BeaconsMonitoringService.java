@@ -1,5 +1,6 @@
 package com.smt.beaconssmt.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -12,8 +13,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,6 +24,7 @@ import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.BeaconManager.MonitoringListener;
 import com.estimote.sdk.Region;
+import com.smt.beaconssmt.PorraActivity;
 import com.smt.beaconssmt.R;
 import com.smt.beaconssmt.activities.BeaconDataActivity;
 import com.smt.beaconssmt.activities.ImageActivity;
@@ -146,6 +150,7 @@ public class BeaconsMonitoringService extends Service{
 	  
 	  public void notifyEnterRegion(int code) {
 		  
+		  Date fecha = new Date();
 		  	Toast.makeText(this, "Beacon "+code, Toast.LENGTH_SHORT).show();
 		  	Intent targetIntent = null;
 		  	Notification noti = null;
@@ -162,7 +167,7 @@ public class BeaconsMonitoringService extends Service{
 				notifTitle = "Felicidades "+user+"!";
 				notifText = "Has ganado 2 entradas para el Coca-Cola Music Xperience sólo por estar aquí";
 	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_blue;
-	   	  	 notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
+	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
 		   	  	    	R.drawable.music_xperience);
 	   	  		notifId = 1;
 	   	  		
@@ -170,28 +175,33 @@ public class BeaconsMonitoringService extends Service{
 	       	  	
 			} else if (code == 36328){
 				
-				targetIntent = new Intent(this, ImageActivity.class);
-				targetIntent.putExtra("image", "planodiscobombaibiza");
+//				targetIntent = new Intent(this, ImageActivity.class);
+//				targetIntent.putExtra("image", "planodiscobombaibiza");
+				targetIntent = new Intent(this, PorraActivity.class);
 				
 				notifTitle = "Bienvenido "+user+"!";
-				notifText = "Vente al curso de peluquería de L'Oreal al que Coca-Cola y Bacardi te invitan en la sala 5";
-	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_purple;
-	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
-		   	  	    	R.drawable.loreal_paris);
+				notifText = "Apuntate a nuestra porra del clásico";
+	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.whatsredlogo;
+	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.escudosclasicorg);
 	   	  		notifId = 2;
 	   	  		
 	   	  		nManager.cancel(22);
 	       	  	
 			} else if (code == 31394) {
 				
-				targetIntent = new Intent(this, WebViewActivity.class);
-				targetIntent.putExtra("web", "http://www.bacardi.com/es/lda");
+//				targetIntent = new Intent(this, WebViewActivity.class);
+//				targetIntent.putExtra("web", "http://www.bacardi.com/es/lda");
+//				targetIntent = new Intent(this, PorraActivity.class);
+				targetIntent = new Intent(Intent.ACTION_VIEW);
+				targetIntent.setData(Uri.parse("market://details?id=com.whatsred.whatsred"));
 				
-				notifTitle = "Bienvenido "+user+"!";
-				notifText = "Hoy, con tu Coca-Cola light + Bacardi Blanco te invitamos a hacerte un peinado de trenzas en la zona de la piscina";
-	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_green;
-	   	  	    notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
-	   	  	    	R.drawable.bacardi_blanco);
+				notifTitle = "Bienvenido "+user+"! ";
+				notifText = "Prueba whats Red, tu nuevo asistente personal de ocio";
+	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.whatsredlogo;
+	   	  	    notifBigIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.whatsredlogo);
+//				notifText = "Apuntate a nuestra porra del clásico";
+//	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.whatsredlogo;
+//	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.escudosclasicorg);
 	   	  		notifId = 3;
 	   	  		
 	   	  		nManager.cancel(33);
@@ -199,16 +209,30 @@ public class BeaconsMonitoringService extends Service{
 			
 			PendingIntent contentIntent = PendingIntent.getActivity(this, 0, targetIntent, PendingIntent.FLAG_ONE_SHOT);
 	          
-       	  	noti = new Notification.Builder(this)
-	         .setContentTitle(notifTitle)
-	         .setContentText(notifText)
-	         .setSmallIcon(notifSmallIcon)
-	         .setOnlyAlertOnce(true)
-	         .setAutoCancel(true)
-	         .setDefaults(Notification.DEFAULT_ALL)
-	         .setContentIntent(contentIntent)
-	         .setLargeIcon(notifBigIcon)
-	         .build();
+//       	  	noti = new Notification.Builder(this)
+//	         .setContentTitle(notifTitle)
+//	         .setContentText(notifText)
+//	         .setSmallIcon(notifSmallIcon)
+//	         .setOnlyAlertOnce(true)
+//	         .setAutoCancel(true)
+//	         .setDefaults(Notification.DEFAULT_ALL)
+//	         .setContentIntent(contentIntent)
+//	         .setLargeIcon(notifBigIcon)
+//	         .build();
+//       	  	
+//       	  	nManager.notify(notifId, noti);
+			
+			NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+    	    .setSmallIcon(notifSmallIcon)
+    	    .setContentTitle(notifTitle)
+    	    .setContentText(notifText)
+    	    .setOnlyAlertOnce(true)
+	        .setAutoCancel(true)
+	        .setDefaults(Notification.DEFAULT_ALL)
+	        .setContentIntent(contentIntent)
+	        .setStyle(new NotificationCompat.BigPictureStyle().setSummaryText(notifText).bigPicture(notifBigIcon));
+       	  	
+       	  	noti = mBuilder.build();
        	  	
        	  	nManager.notify(notifId, noti);
        	  		

@@ -7,17 +7,17 @@
         <EditTextPreference
             android:key="pref_key_nickname"
             android:summary="Introduce aquí tu nombre de usuario"
-            android:title="Nickname"/>
+            android:title="Nombre de usuario"/>
         
         <EditTextPreference
             android:key="pref_key_email"
             android:summary="Introduce aquí tu email"
-            android:title="User Email"/>
+            android:title="Email"/>
         
         <EditTextPreference
             android:key="pref_key_pass"
             android:summary="Introduce aquí tu contraseña"
-            android:title="Pass"/>
+            android:title="Contraseña"/>
 
     </PreferenceCategory>
     <PreferenceCategory 

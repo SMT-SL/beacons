@@ -7,7 +7,7 @@
               android:background="#aacb060f">
 
   <ImageView android:tag="img"
-      		 android:layout_width="60dp"
+      		 android:layout_width="90dp"
              android:layout_height="80dp"
              android:layout_gravity="center_vertical"
              android:layout_marginRight="10dp"

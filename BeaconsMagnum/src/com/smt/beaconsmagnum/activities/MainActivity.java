@@ -37,6 +37,19 @@ public class MainActivity extends Activity {
 	
 	private Button runInBackBtn;
 	
+	private static boolean saliendo = true;
+	
+	
+	public static boolean isSaliendo() {
+		return saliendo;
+	}
+
+
+	public static void setSaliendo(boolean saliendo) {
+		MainActivity.saliendo = saliendo;
+	}
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -112,7 +125,8 @@ public class MainActivity extends Activity {
 //    	  } catch (RemoteException e) {
 //			e.printStackTrace();
 //    	  }
-    	  Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
+//    	  Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
+    	  Intent intent = new Intent(this, BeaconsMonitoringService.class);
           stopService(intent);
     	  connectToRangingService();
       }
@@ -129,39 +143,48 @@ public class MainActivity extends Activity {
 //  	  } catch (RemoteException e) {
 //			e.printStackTrace();
 //  	  }
-      Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
+//      Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
+      Intent intent = new Intent(this, BeaconsMonitoringService.class);
       stopService(intent);
       connectToRangingService();
     }
     
     @Override
 	protected void onPause() {
-		try {
-			beaconManager.stopRanging(BeaconsApp.ALL_ESTIMOTE_BEACONS_REGION);
-//			beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_1);
-//        	beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_2);
-//			beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_3);
-			Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
-			startService(intent);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+    	if (saliendo){
+    		try {
+    			beaconManager.stopRanging(BeaconsApp.ALL_ESTIMOTE_BEACONS_REGION);
+//    			beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_1);
+//            	beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_2);
+//    			beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_3);
+//    			Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
+    			Intent intent = new Intent(this, BeaconsMonitoringService.class);
+    			startService(intent);
+    		} catch (RemoteException e) {
+    			e.printStackTrace();
+    		}
+    	}
+		
 		super.onPause();
 	}
 	
 	 @Override
 	    protected void onStop() {
-	    	try {
-				beaconManager.stopRanging(BeaconsApp.ALL_ESTIMOTE_BEACONS_REGION);
-//				beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_1);
-//	        	beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_2);
-//				beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_3);
-				Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
-				startService(intent);
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
-	    	super.onStop();
+		 if (saliendo){
+			 try {
+					beaconManager.stopRanging(BeaconsApp.ALL_ESTIMOTE_BEACONS_REGION);
+//					beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_1);
+//		        	beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_2);
+//					beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_3);
+//					Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
+					Intent intent = new Intent(this, BeaconsMonitoringService.class);
+					startService(intent);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+		    	
+		 }
+		 super.onStop();
 	    }
 
     
@@ -176,7 +199,8 @@ public class MainActivity extends Activity {
 //        	} catch (RemoteException e) {
 //    			e.printStackTrace();
 //        	}
-        	Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
+//        	Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
+        	Intent intent = new Intent(this, BeaconsMonitoringService.class);
             stopService(intent);
         	connectToRangingService();
         } else {
@@ -195,7 +219,8 @@ public class MainActivity extends Activity {
 //			beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_1);
 //        	beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_2);
 //			beaconManager.startMonitoring(BeaconsApp.BEACONS_REGION_3);
-			Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
+//			Intent intent = new Intent("com.smt.beaconssmt.services.BeaconsMonitoringService");
+			Intent intent = new Intent(this, BeaconsMonitoringService.class);
 		      startService(intent);
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -231,18 +256,21 @@ public class MainActivity extends Activity {
 				targetIntent = new Intent(MainActivity.this, WebViewActivity.class);
 				targetIntent.putExtra("web", "http://www.frigo.es/Brand/Magnum.aspx");
 				startActivity(targetIntent);
+				saliendo = false;
 	       	  	
 			} else if (code.equals("36328")){
 				
 				targetIntent = new Intent(MainActivity.this, ImageActivity.class);
-				targetIntent.putExtra("image", "magnum_sandwich");
+				targetIntent.putExtra("image", "magnumfrac21");
 				startActivity(targetIntent);
+				saliendo = false;
 	       	  	
 			} else if (code.equals("31394")) {
 				
 				targetIntent = new Intent(MainActivity.this, ImageActivity.class);
 				targetIntent.putExtra("image", "fresa1");
 				startActivity(targetIntent);
+				saliendo = false;
 	   	  		
 			}
         	

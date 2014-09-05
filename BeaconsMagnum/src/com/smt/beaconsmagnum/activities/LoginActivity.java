@@ -21,7 +21,7 @@ import com.smt.beaconsmagnum.utils.BeaconsApp;
 public class LoginActivity extends Activity {
 	
 	private static final String[] DUMMY_CREDENTIALS = new String[] {
-		"hugo@:4321", "alberto@whatsred.com:alberto", "jose@whatsred.com:jose", "joseluis@whatsred.com:joseluis", };
+		"hugo@:4321", "alberto@smt.com:alberto" };
 	
 	private Button loginBtn;
 	private TextView emailTxt;

@@ -20,4 +20,10 @@ public class ImageActivity extends Activity {
 	    ImageView imageView = (ImageView) findViewById(R.id.imageButton1);
 	    imageView.setImageDrawable(getResources().getDrawable(resId));
 	}
+	
+	@Override
+	protected void onPause() {
+		MainActivity.setSaliendo(true);
+		super.onPause();
+	}
 }

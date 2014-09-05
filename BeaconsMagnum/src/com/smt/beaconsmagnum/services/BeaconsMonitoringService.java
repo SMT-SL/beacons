@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -168,23 +169,25 @@ public class BeaconsMonitoringService extends Service{
 	   	  		notifSmallIcon = R.drawable.beacon_blue;
 	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
 		   	  	    	R.drawable.magnumfrac);
-	   	  		notifId = 1;
+	   	  		notifId = 111;
 	   	  		
-	   	  		nManager.cancel(11);
+	   	  		nManager.cancel(1111);
 	       	  	
 			} else if (code == 36328){
 				
 				targetIntent = new Intent(this, ImageActivity.class);
-				targetIntent.putExtra("image", "magnum_sandwich");
+//				targetIntent.putExtra("image", "magnum_sandwich");
+				targetIntent.putExtra("image", "magnumfrac21");
 				
-				notifTitle = "Bienvenido "+user+"!";
-				notifText = "Hoy comprando tu Magnum Sandwich, te regalamos otro para un doble disfrute!";
+				notifTitle = "Bienvenido "+user+"! Hoy tu frac...";
+//				notifText = "Hoy comprando tu Magnum Sandwich, te regalamos otro para un doble disfrute!";
+				notifText = "Hoy tenemos 2x1 comprando tu Magnum Frac!! Disfrutalo en pareja";
 	   	  		notifSmallIcon = R.drawable.beacon_purple;
 	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
-		   	  	    	R.drawable.magnum_sandwich);
-	   	  		notifId = 2;
+		   	  	    	R.drawable.magnumfrac21);
+	   	  		notifId = 112;
 	   	  		
-	   	  		nManager.cancel(22);
+	   	  		nManager.cancel(1122);
 	       	  	
 			} else if (code == 31394) {
 				
@@ -196,23 +199,35 @@ public class BeaconsMonitoringService extends Service{
 	   	  		notifSmallIcon = R.drawable.beacon_green;
 	   	  	    notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
 	   	  	    	R.drawable.fresa1);
-	   	  		notifId = 3;
+	   	  		notifId = 113;
 	   	  		
-	   	  		nManager.cancel(33);
+	   	  		nManager.cancel(1133);
 			}
 			
 			PendingIntent contentIntent = PendingIntent.getActivity(this, 0, targetIntent, PendingIntent.FLAG_ONE_SHOT);
 	          
-       	  	noti = new Notification.Builder(this)
-	         .setContentTitle(notifTitle)
-	         .setContentText(notifText)
-	         .setSmallIcon(notifSmallIcon)
-	         .setOnlyAlertOnce(true)
-	         .setAutoCancel(true)
-	         .setDefaults(Notification.DEFAULT_ALL)
-	         .setContentIntent(contentIntent)
-	         .setLargeIcon(notifBigIcon)
-	         .build();
+//       	  	noti = new Notification.Builder(this)
+//	         .setContentTitle(notifTitle)
+//	         .setContentText(notifText)
+//	         .setSmallIcon(notifSmallIcon)
+//	         .setOnlyAlertOnce(true)
+//	         .setAutoCancel(true)
+//	         .setDefaults(Notification.DEFAULT_ALL)
+//	         .setContentIntent(contentIntent)
+//	         .setLargeIcon(notifBigIcon)
+//	         .build();
+       	  	
+       	  	NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+    	    .setSmallIcon(notifSmallIcon)
+    	    .setContentTitle(notifTitle)
+    	    .setContentText(notifText)
+    	    .setOnlyAlertOnce(true)
+	        .setAutoCancel(true)
+	        .setDefaults(Notification.DEFAULT_ALL)
+	        .setContentIntent(contentIntent)
+	        .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(notifBigIcon));
+       	  	
+       	  	noti = mBuilder.build();
        	  	
        	  	nManager.notify(notifId, noti);
        	  		
@@ -231,20 +246,20 @@ public class BeaconsMonitoringService extends Service{
 			if (code == 64444){
 				
 	   	  		notifSmallIcon = R.drawable.beacon_gray;
-	   	  		notifId = 11;
-	   	  		nManager.cancel(1);
+	   	  		notifId = 1111;
+	   	  		nManager.cancel(111);
 	       	  	
 			} else if (code == 36328){
 				
 	   	  		notifSmallIcon = R.drawable.beacon_gray;
-	   	  		notifId = 22;
-	   	  		nManager.cancel(2);
+	   	  		notifId = 1122;
+	   	  		nManager.cancel(112);
 	       	  	
 			} else if (code == 31394) {
 				
 				notifSmallIcon = R.drawable.beacon_gray;
-	   	  		notifId = 33;
-	   	  		nManager.cancel(3);
+	   	  		notifId = 1133;
+	   	  		nManager.cancel(113);
 	   	  		
 			}
 			

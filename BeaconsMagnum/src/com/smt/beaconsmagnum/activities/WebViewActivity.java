@@ -19,4 +19,10 @@ public class WebViewActivity extends Activity {
 		webview.loadUrl(web);
 
 	}
+	
+	@Override
+	protected void onPause() {
+		MainActivity.setSaliendo(true);
+		super.onPause();
+	}
 }

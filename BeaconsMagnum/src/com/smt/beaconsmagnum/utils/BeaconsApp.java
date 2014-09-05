@@ -1,8 +1,6 @@
 package com.smt.beaconsmagnum.utils;
 
 
-import java.util.List;
-
 import android.app.Application;
 
 import com.estimote.sdk.BeaconManager;
@@ -19,7 +17,14 @@ public class BeaconsApp  extends Application {
 	
 	private static BeaconsDiscovered beaconsDiscovered;
 	
-	private BeaconManager bm = new BeaconManager(this);
+	private BeaconManager bm;
+	
+	@Override
+	public void onCreate() {
+		beaconsDiscovered = new BeaconsDiscovered();
+		bm = new BeaconManager(this);
+		super.onCreate();
+	}
 	     
 	public BeaconManager getBm(){
 		return bm;
