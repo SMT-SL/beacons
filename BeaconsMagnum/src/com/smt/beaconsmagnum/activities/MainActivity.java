@@ -251,29 +251,53 @@ public class MainActivity extends Activity {
         	
         	String code = String.valueOf(adapter.getItem(position).getMinor());
 			Intent targetIntent;
+			
 			if (code.equals("64444")){
 				
-				targetIntent = new Intent(MainActivity.this, WebViewActivity.class);
-				targetIntent.putExtra("web", "http://www.frigo.es/Brand/Magnum.aspx");
+				targetIntent = new Intent(MainActivity.this, ImageActivity.class);
+				targetIntent.putExtra("image", "magnumfrac32");
 				startActivity(targetIntent);
 				saliendo = false;
 	       	  	
 			} else if (code.equals("36328")){
-				
-				targetIntent = new Intent(MainActivity.this, ImageActivity.class);
-				targetIntent.putExtra("image", "magnumfrac21");
-				startActivity(targetIntent);
-				saliendo = false;
 	       	  	
 			} else if (code.equals("31394")) {
 				
-				targetIntent = new Intent(MainActivity.this, ImageActivity.class);
-				targetIntent.putExtra("image", "fresa1");
-				startActivity(targetIntent);
-				saliendo = false;
+//				targetIntent = new Intent(MainActivity.this, WebViewActivity.class);
+//				targetIntent.putExtra("web", "https://www.youtube.com/watch?v=dIfKd0aVeE8");
+//				startActivity(targetIntent);
+//	   	  		saliendo=false;
+	   	  		
+	   	  		targetIntent = new Intent(MainActivity.this, ImageActivity.class);
+	   	  		targetIntent.putExtra("image", "magnumfrac43");
+	   	  		startActivity(targetIntent);
+	   	  		saliendo = false;
 	   	  		
 			}
-        	
+			
+//			if (code.equals("64444")){
+//				
+//				targetIntent = new Intent(MainActivity.this, WebViewActivity.class);
+//				targetIntent.putExtra("web", "http://www.frigo.es/Brand/Magnum.aspx");
+//				startActivity(targetIntent);
+//				saliendo = false;
+//	       	  	
+//			} else if (code.equals("36328")){
+//				
+//				targetIntent = new Intent(MainActivity.this, ImageActivity.class);
+//				targetIntent.putExtra("image", "magnumfrac21");
+//				startActivity(targetIntent);
+//				saliendo = false;
+//	       	  	
+//			} else if (code.equals("31394")) {
+//				
+//				targetIntent = new Intent(MainActivity.this, ImageActivity.class);
+//				targetIntent.putExtra("image", "fresa1");
+//				startActivity(targetIntent);
+//				saliendo = false;
+//	   	  		
+//			}
+//        	
 //              Intent intent = new Intent(MainActivity.this, BeaconDataActivity.class);
 //              intent.putExtra("beacon", adapter.getItem(position));
 //              startActivity(intent);

@@ -63,13 +63,17 @@ public class LeDeviceListAdapter extends BaseAdapter {
     ViewHolder holder = (ViewHolder) view.getTag();
     if (beacon.getMinor() == 64444){
     	holder.beaconImageView.setImageResource(R.drawable.magnumfrac);
-    	holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Hace un día perfecto para tomarse un Magnum Frac'", Utils.computeAccuracy(beacon)));
+    	holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Hace un día perfecto para tomarse un Magnum Frac, hoy 3x2!'", Utils.computeAccuracy(beacon)));
+//    	holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Hace un día perfecto para tomarse un Magnum Frac'", Utils.computeAccuracy(beacon)));
 	} else if (beacon.getMinor() == 36328){
 		holder.beaconImageView.setImageResource(R.drawable.magnum_sandwich);
 		holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Hoy comprando tu Magnum Sandwich, te regalamos otro para un doble disfrute!'", Utils.computeAccuracy(beacon)));
 	} else if (beacon.getMinor() == 31394) {
-		holder.beaconImageView.setImageResource(R.drawable.fresa1);
-		holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Sólo por estar aquí te regalamos un sabroso Magnum Strawberry & White'", Utils.computeAccuracy(beacon)));
+		holder.beaconImageView.setImageResource(R.drawable.magnumfrac);
+    	holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Hace un día perfecto para tomarse un Magnum Frac, hoy 4x3!'", Utils.computeAccuracy(beacon)));
+//		holder.beaconImageView.setImageResource(R.drawable.fresa1);
+//		holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Sólo por estar aquí te regalamos un sabroso Magnum Strawberry & White'", Utils.computeAccuracy(beacon)));
+//		holder.macTextView.setText(String.format("%s (%.2fm)","Pásate a ver nuestro video promocional de Mágnum", Utils.computeAccuracy(beacon)));
 	}
 //    holder.macTextView.setText(String.format("MAC: %s (%.2fm)", beacon.getMacAddress(), Utils.computeAccuracy(beacon)));
     holder.majorTextView.setText("Major: " + beacon.getMajor());

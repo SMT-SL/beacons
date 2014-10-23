@@ -251,9 +251,13 @@ public class MainActivity extends Activity {
 			Intent targetIntent;
 			if (code.equals("64444")){
 				
-				targetIntent = new Intent(MainActivity.this, WebViewActivity.class);
-				targetIntent.putExtra("web", "http://musicexperience.cocacola.es/");
+//				targetIntent = new Intent(MainActivity.this, WebViewActivity.class);
+//				targetIntent.putExtra("web", "http://musicexperience.cocacola.es/");
+//				startActivity(targetIntent);
+				
+				targetIntent = new Intent(MainActivity.this, PorraActivity.class);
 				startActivity(targetIntent);
+				
 				saliendo = false;
 	       	  	
 			} else if (code.equals("36328")){
@@ -264,14 +268,18 @@ public class MainActivity extends Activity {
 	       	  	
 			} else if (code.equals("31394")) {
 				
-				targetIntent = new Intent(Intent.ACTION_VIEW);
-				targetIntent.setData(Uri.parse("market://details?id=com.whatsred.whatsred"));
-				startActivity(targetIntent);
-//				saliendo = false;
+//				targetIntent = new Intent(Intent.ACTION_VIEW);
+//				targetIntent.setData(Uri.parse("market://details?id=com.whatsred.whatsred"));
+//				startActivity(targetIntent);
 				
 //				targetIntent = new Intent(MainActivity.this, PorraActivity.class);
 //				startActivity(targetIntent);
+				
+				targetIntent = new Intent(MainActivity.this, WebViewActivity.class);
+				targetIntent.putExtra("web", "http://whatsred.com/");
+				startActivity(targetIntent);
 	   	  		saliendo=false;
+	   	  		
 			}
         	
 //              Intent intent = new Intent(MainActivity.this, BeaconDataActivity.class);

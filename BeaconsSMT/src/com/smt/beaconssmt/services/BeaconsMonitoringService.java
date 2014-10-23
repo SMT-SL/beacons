@@ -161,14 +161,21 @@ public class BeaconsMonitoringService extends Service{
    	  		
 			if (code == 64444){
 				
-				targetIntent = new Intent(this, WebViewActivity.class);
-				targetIntent.putExtra("web", "http://musicexperience.cocacola.es/");
+//				targetIntent = new Intent(this, WebViewActivity.class);
+//				targetIntent.putExtra("web", "http://musicexperience.cocacola.es/");
+//				
+//				notifTitle = "Felicidades "+user+"!";
+//				notifText = "Has ganado 2 entradas para el Coca-Cola Music Xperience sólo por estar aquí";
+//	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_blue;
+//	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
+//		   	  	    	R.drawable.music_xperience);
+	   	  		
+		   	  	targetIntent = new Intent(this, PorraActivity.class);
 				
-				notifTitle = "Felicidades "+user+"!";
-				notifText = "Has ganado 2 entradas para el Coca-Cola Music Xperience sólo por estar aquí";
-	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.beacon_blue;
-	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
-		   	  	    	R.drawable.music_xperience);
+				notifTitle = "Bienvenido "+user+"!";
+				notifText = "Apuntate a nuestra porra del clásico";
+	   	  		notifSmallIcon = com.smt.beaconssmt.R.drawable.whatsredlogo;
+	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(), R.drawable.escudosclasicorg);
 	   	  		notifId = 1;
 	   	  		
 	   	  		nManager.cancel(11);
@@ -192,8 +199,11 @@ public class BeaconsMonitoringService extends Service{
 //				targetIntent = new Intent(this, WebViewActivity.class);
 //				targetIntent.putExtra("web", "http://www.bacardi.com/es/lda");
 //				targetIntent = new Intent(this, PorraActivity.class);
-				targetIntent = new Intent(Intent.ACTION_VIEW);
-				targetIntent.setData(Uri.parse("market://details?id=com.whatsred.whatsred"));
+//				targetIntent = new Intent(Intent.ACTION_VIEW);
+//				targetIntent.setData(Uri.parse("market://details?id=com.whatsred.whatsred"));
+				targetIntent = new Intent(this, WebViewActivity.class);
+				targetIntent.putExtra("web", "http://whatsred.com/");
+				startActivity(targetIntent);
 				
 				notifTitle = "Bienvenido "+user+"! ";
 				notifText = "Prueba whats Red, tu nuevo asistente personal de ocio";

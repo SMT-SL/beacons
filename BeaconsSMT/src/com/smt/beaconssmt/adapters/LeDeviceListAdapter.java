@@ -65,9 +65,11 @@ public class LeDeviceListAdapter extends BaseAdapter {
 	  Date fecha = new Date();
     ViewHolder holder = (ViewHolder) view.getTag();
     if (beacon.getMinor() == 64444){
-    	holder.beaconImageView.setImageResource(R.drawable.beacon_blue);
-    	holder.macTextView.setText(String.format("%s (%.2fm)","'Has ganado 2 entradas para el Coca-Cola Music Xperience sólo por estar aquí y ahora'", Utils.computeAccuracy(beacon)));
-	} else if (beacon.getMinor() == 36328){
+//    	holder.beaconImageView.setImageResource(R.drawable.beacon_blue);
+//    	holder.macTextView.setText(String.format("%s (%.2fm)","'Has ganado 2 entradas para el Coca-Cola Music Xperience sólo por estar aquí y ahora'", Utils.computeAccuracy(beacon)));
+    	holder.beaconImageView.setImageResource(R.drawable.realmadridbarcelona);
+		holder.macTextView.setText(String.format("%s (%.2fm)","Hola "+MainActivity.user+"! Son las "+fecha.getHours()+":"+fecha.getMinutes()+":"+fecha.getSeconds()+" y hoy, "+fecha.getDate()+" del "+fecha.getMonth()+", es el día del fútbol: \n \nParticipa en la porra del clásico Real Madrid - FC Barcelona en nuestro local, y podrás ganar premios alucinantes", Utils.computeAccuracy(beacon)));
+    } else if (beacon.getMinor() == 36328){
 //		holder.beaconImageView.setImageResource(R.drawable.beacon_purple);
 		holder.beaconImageView.setImageResource(R.drawable.realmadridbarcelona);
 //		holder.macTextView.setText(String.format("%s (%.2fm)","Promoción 'Vente al curso de peluquería de L'Oreal al que Coca-Cola y Bacardi te invitan en la sala 5'", Utils.computeAccuracy(beacon)));

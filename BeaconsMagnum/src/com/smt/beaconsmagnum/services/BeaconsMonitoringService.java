@@ -25,6 +25,7 @@ import com.estimote.sdk.BeaconManager.MonitoringListener;
 import com.estimote.sdk.Region;
 import com.smt.beaconsmagnum.R;
 import com.smt.beaconsmagnum.activities.ImageActivity;
+import com.smt.beaconsmagnum.activities.MainActivity;
 import com.smt.beaconsmagnum.activities.WebViewActivity;
 import com.smt.beaconsmagnum.model.BeaconMagnum;
 import com.smt.beaconsmagnum.utils.BeaconsApp;
@@ -161,11 +162,13 @@ public class BeaconsMonitoringService extends Service{
    	  		
 			if (code == 64444){
 				
-				targetIntent = new Intent(this, WebViewActivity.class);
-				targetIntent.putExtra("web", "http://www.frigo.es/Brand/Magnum.aspx");
+//				targetIntent = new Intent(this, WebViewActivity.class);
+//				targetIntent.putExtra("web", "http://www.frigo.es/Brand/Magnum.aspx");
+				targetIntent = new Intent(this, ImageActivity.class);
+				targetIntent.putExtra("image", "magnumfrac32");
 				
 				notifTitle = "Bienvenido "+user+"!";
-				notifText = "Hace un día perfecto para tomarse un Magnum Frac";
+				notifText = "Hace un día perfecto para tomarse un Magnum Frac, hoy 3x2!";
 	   	  		notifSmallIcon = R.drawable.beacon_blue;
 	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
 		   	  	    	R.drawable.magnumfrac);
@@ -191,14 +194,26 @@ public class BeaconsMonitoringService extends Service{
 	       	  	
 			} else if (code == 31394) {
 				
+//				targetIntent = new Intent(this, ImageActivity.class);
+//				targetIntent.putExtra("image", "fresa");
+//				targetIntent = new Intent(this, WebViewActivity.class);
+//				targetIntent.putExtra("web", "https://www.youtube.com/watch?v=dIfKd0aVeE8");
+//				
+////				notifTitle = "Felicidades "+user+"!";
+////				notifText = "Sólo por estar aquí te regalamos un sabroso Magnum Strawberry & White";
+//				notifTitle = "Hola "+user+"!";
+//				notifText = "Mira lo que te tenemos preparado en Magnum";
+//	   	  		notifSmallIcon = R.drawable.beacon_green;
+//	   	  	    notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
+//	   	  	    	R.drawable.fresa1);
 				targetIntent = new Intent(this, ImageActivity.class);
-				targetIntent.putExtra("image", "fresa");
+				targetIntent.putExtra("image", "magnumfrac43");
 				
-				notifTitle = "Felicidades "+user+"!";
-				notifText = "Sólo por estar aquí te regalamos un sabroso Magnum Strawberry & White";
+				notifTitle = "Bienvenido "+user+"!";
+				notifText = "Hace un día perfecto para tomarse un Magnum Frac, hoy 4x3!";
 	   	  		notifSmallIcon = R.drawable.beacon_green;
-	   	  	    notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
-	   	  	    	R.drawable.fresa1);
+	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
+		   	  	    	R.drawable.magnumfrac);
 	   	  		notifId = 113;
 	   	  		
 	   	  		nManager.cancel(1133);
