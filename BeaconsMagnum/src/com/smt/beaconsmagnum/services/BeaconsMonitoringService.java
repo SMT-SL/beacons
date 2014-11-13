@@ -168,7 +168,7 @@ public class BeaconsMonitoringService extends Service{
 				targetIntent.putExtra("image", "magnumfrac32");
 				
 				notifTitle = "Bienvenido "+user+"!";
-				notifText = "Hace un día perfecto para tomarse un Magnum Frac, hoy 3x2!";
+				notifText = "Hace un dï¿½a perfecto para tomarse un Magnum Frac, hoy 3x2!";
 	   	  		notifSmallIcon = R.drawable.beacon_blue;
 	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
 		   	  	    	R.drawable.magnumfrac);
@@ -200,7 +200,7 @@ public class BeaconsMonitoringService extends Service{
 //				targetIntent.putExtra("web", "https://www.youtube.com/watch?v=dIfKd0aVeE8");
 //				
 ////				notifTitle = "Felicidades "+user+"!";
-////				notifText = "Sólo por estar aquí te regalamos un sabroso Magnum Strawberry & White";
+////				notifText = "Sï¿½lo por estar aquï¿½ te regalamos un sabroso Magnum Strawberry & White";
 //				notifTitle = "Hola "+user+"!";
 //				notifText = "Mira lo que te tenemos preparado en Magnum";
 //	   	  		notifSmallIcon = R.drawable.beacon_green;
@@ -210,7 +210,7 @@ public class BeaconsMonitoringService extends Service{
 				targetIntent.putExtra("image", "magnumfrac43");
 				
 				notifTitle = "Bienvenido "+user+"!";
-				notifText = "Hace un día perfecto para tomarse un Magnum Frac, hoy 4x3!";
+				notifText = "Hace un dï¿½a perfecto para tomarse un Magnum Frac, hoy 4x3!";
 	   	  		notifSmallIcon = R.drawable.beacon_green;
 	   	  		notifBigIcon = BitmapFactory.decodeResource(this.getResources(),
 		   	  	    	R.drawable.magnumfrac);

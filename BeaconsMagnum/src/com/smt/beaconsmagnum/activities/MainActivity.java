@@ -109,7 +109,7 @@ public class MainActivity extends Activity {
 
       // Check if device supports Bluetooth Low Energy.
       if (!beaconManager.hasBluetooth()) {
-        Toast.makeText(this, "El dispositivo no soporta Bluetooth Low Energy, los beacons no serán detectados", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "El dispositivo no soporta Bluetooth Low Energy, los beacons no serï¿½n detectados", Toast.LENGTH_LONG).show();
         return;
       }
 
@@ -340,7 +340,7 @@ public class MainActivity extends Activity {
       		    
       		    Toast.makeText(this, "Hasta pronto "+user+"!", Toast.LENGTH_SHORT).show();
       		    
-      		    //Simulamos el tiempo de conexión al servidor...
+      		    //Simulamos el tiempo de conexiï¿½n al servidor...
     			SystemClock.sleep(500);
     			
     			System.exit(0);
