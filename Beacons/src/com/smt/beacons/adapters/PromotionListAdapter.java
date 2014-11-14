@@ -38,8 +38,9 @@ public class PromotionListAdapter extends BaseAdapter {
 			holder = new PromotionListHolder();
 			convertView = li.inflate(R.layout.listitem_device, parent, false);
 
-			holder.textPromo = ((TextView) convertView.findViewById(R.id.device_address));
+			holder.textPromo = ((TextView) convertView.findViewById(R.id.offer_name));
 			holder.imagePromo= (ImageView) convertView.findViewById(R.id.image_promo);
+			holder.textDesc = (TextView) convertView.findViewById(R.id.offer_desc);
 
 			convertView.setTag(holder);
 
@@ -50,7 +51,9 @@ public class PromotionListAdapter extends BaseAdapter {
 		OfferDetailsDTO promo = EasiActivity.promotions.get(position);
 
 		holder.textPromo.setText(promo.getName());
-		
+		if (!promo.getDescription().equals("null")){
+			holder.textDesc.setText(promo.getDescription());
+		}
 //		holder.imagePromo.setImageDrawable(context.getResources().getDrawable(R.drawable.frigo_logo_blanco_cuadrado));
 		holder.imagePromo.setImageDrawable(context.getResources().getDrawable(R.drawable.logo_smt));
 		

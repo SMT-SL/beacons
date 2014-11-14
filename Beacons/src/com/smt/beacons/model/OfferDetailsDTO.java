@@ -8,6 +8,7 @@ public class OfferDetailsDTO {
 
 	private int offerId;
 	private String name;
+	private String description;
 	private String thumbnail;
 	private int offerType;
 	private String offerURL;
@@ -19,6 +20,7 @@ public class OfferDetailsDTO {
 			thumbnail = object.getString("thumbnail");
 			offerType = object.getInt("offerType");
 			offerURL = object.getString("offerURL");
+			description = object.getString("offerDescription");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -74,6 +76,14 @@ public class OfferDetailsDTO {
 			}
 		}
 		return false;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 }

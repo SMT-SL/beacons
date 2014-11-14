@@ -86,6 +86,7 @@ public class CheckBeaconsTask extends AsyncTask<Void, Integer, JSONArray>{
 	@Override
 	public void onPostExecute(JSONArray jsonResult){
 		if (jsonResult != null){
+			EasiActivity.promotions.clear();
 			Log.e("JSON RETURNED", jsonResult.toString());
 			for (int i= 0; i<jsonResult.length(); i++){
 				

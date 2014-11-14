@@ -183,7 +183,7 @@ public class EasiActivity extends Activity implements IBeaconListener, GooglePla
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTimeInMillis(System.currentTimeMillis());
 			calendar.add(Calendar.SECOND, 20); // first time
-			long frequency = 20 * 1000; // in ms
+			long frequency = 15 * 1000; // in ms
 			alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), frequency, pendingIntent);
 		}
 		super.onPause();
@@ -215,7 +215,7 @@ public class EasiActivity extends Activity implements IBeaconListener, GooglePla
 		        			}
 		            	});
 		            }
-		        },1500, 10000
+		        },1500, 15000
 		);
 		
 		Intent intent = new Intent(getApplicationContext(), StartServiceAtBootReceiver.class);
@@ -281,7 +281,6 @@ public class EasiActivity extends Activity implements IBeaconListener, GooglePla
 	
 	private void scanBeacons(){
 		_beacons.clear();
-		promotions.clear();
 		list.clear();
 		
 		// Check Bluetooth every time
@@ -300,7 +299,6 @@ public class EasiActivity extends Activity implements IBeaconListener, GooglePla
 			_ibp.startScan();		
 		}		
 	}
-	
 	
 	
 	@SuppressLint("InflateParams")

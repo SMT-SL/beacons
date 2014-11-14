@@ -40,7 +40,7 @@ public class BeaconsMonitoringService extends Service implements IBeaconListener
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Toast.makeText(this, "MONITORING START", Toast.LENGTH_LONG).show();
+//		Toast.makeText(this, "MONITORING START", Toast.LENGTH_LONG).show();
 	    Log.e("MonitoringService", "Received start id " + startId + ": " + intent);
 	    
 //	    _ibp = ((BeaconsApp)getApplicationContext()).getIbp();
@@ -95,7 +95,7 @@ public class BeaconsMonitoringService extends Service implements IBeaconListener
 	
 	@Override
 	public void onDestroy() {
-		Toast.makeText(this, "MONITORING STOP", Toast.LENGTH_LONG).show();
+//		Toast.makeText(this, "MONITORING STOP", Toast.LENGTH_LONG).show();
 		Log.e("MonitoringService", "Destroy" );
 		_ibp.stopScan();
 		mLocationClient.disconnect();
