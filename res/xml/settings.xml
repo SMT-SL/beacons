@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+ 
+    <PreferenceCategory android:title="Perfil de usuario" >
+        <EditTextPreference
+                android:title="Nombre de usuario"
+                android:summary="elige un nombre de usuario"
+                android:key="nickName"/>
+        <EditTextPreference
+                android:title="Email"
+                android:summary="tu email"
+                android:key="email"/>
+        <EditTextPreference
+                android:title="Password"
+                android:summary="tu email"
+                android:key="password"/>
+        <ListPreference
+            android:key="prefSex"
+            android:entries="@array/syncFrequency"
+            android:summary="elige tu sexo"
+            android:entryValues="@array/syncFrequency"
+            android:title="Sex" />
+        <EditTextPreference
+                android:title="Codigo Postal"
+                android:summary="CP del lugar donde resides"
+                android:key="CP"
+                android:inputType="number"/>
+        <EditTextPreference
+                android:title="Fecha de nacimiento"
+                android:summary="tu fecha de nacimiento"
+                android:key="prefBirth"/>
+    </PreferenceCategory>
+     
+    <PreferenceCategory android:title="Otros ajustes" >
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="prefSendReport"
+            android:summary="decide si recibir o no notificaciones"
+            android:title="Enviar notificaciones" >
+        </CheckBoxPreference>
+ 
+        <ListPreference
+            android:key="prefSyncFrequency"
+            android:entries="@array/syncFrequency"
+            android:summary="frecuencia de busqueda de beacons en segundos"
+            android:entryValues="@array/syncFrequency"
+            android:title="Frecuencia de refresco" />
+    </PreferenceCategory>
+</PreferenceScreen>

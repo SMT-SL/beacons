@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+ 	
+ 	<QuickContactBadge
+        android:id="@+id/quickContact"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:focusable="false"
+        android:paddingTop="6dp" />
+ 	
+        <TextView
+            android:id="@+id/textNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="6dp"
+            android:layout_below="@+id/quickContact"
+            android:text="Nombre"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+		<EditText
+       		android:id="@+id/editNombre"
+        	android:layout_width="match_parent"
+       		android:layout_height="wrap_content"
+        	android:layout_below="@+id/quickContact"
+        	android:layout_alignParentRight="true"/>
+        
+        <TextView
+            android:id="@+id/textEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="6dp"
+            android:layout_below="@+id/textNombre"
+            android:text="Email"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+		<EditText
+       		android:id="@+id/editEmail"
+        	android:layout_width="match_parent"
+       		android:layout_height="wrap_content"
+        	android:layout_below="@+id/textNombre"
+        	android:layout_alignParentRight="true"/>
+        <TextView
+            android:id="@+id/textCp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textEmail"
+            android:paddingTop="6dp"
+            android:text="CP"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+        <EditText
+       		android:id="@+id/editCp"
+        	android:layout_width="match_parent"
+       		android:layout_height="wrap_content"
+       		android:layout_below="@+id/textEmail"
+        	android:layout_alignParentRight="true" />
+
+</RelativeLayout>
