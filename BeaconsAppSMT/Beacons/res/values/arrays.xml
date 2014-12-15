@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="syncFrequency">
+        <item name="1">1</item>
+        <item name="7">5</item>
+        <item name="3">10</item>
+        <item name="0">15</item>
+    </string-array>
+    
+    <string-array name="sex"> 
+        <item name="M">Masculino</item>
+        <item name="F">Femenino</item>
+        <item name="O">Otros</item>
+    </string-array>
+     
+</resources>
