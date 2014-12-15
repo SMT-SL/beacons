@@ -143,7 +143,7 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 			list.add(new BeaconInfoDTO(region.getId2() != null ? region.getId2().toInt() : 0, region.getId3() != null ? region.getId3().toInt() : 0));
 			if (easiActivity != null) {
 				mCurrentLocation = mLocationClient.getLastLocation();
-				easiActivity.didEnterRegion(region);
+				easiActivity.didEnterRegion(region, mCurrentLocation);
 			} else {
 				// Comprobar is esta activo ubicacion o no. Intentar mandar
 				// notificacion si tenemos ubicacion activado. Si no tenemos

@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="20dp"
-         android:textColor="#FFAAAAAA"
+         android:textColor="#000000"
         android:layout_below="@+id/imagePerfil"
         android:layout_toLeftOf="@+id/editNombre"
         android:ems="10"
@@ -40,7 +40,7 @@
         android:layout_below="@+id/imagePerfil"
         android:layout_marginTop="20dp"
         android:ems="10"
-         android:textColor="#FFAAAAAA"
+         android:textColor="#000000"
         android:onClick="onEditTextClicked"
         android:password="false" />
 
@@ -53,7 +53,7 @@
         android:layout_marginTop="20dp"
         android:layout_toLeftOf="@+id/editEmail"
         android:ems="10"
-         android:textColor="#FFAAAAAA"
+         android:textColor="#000000"
         android:text="@string/email"
         android:textAppearance="?android:attr/textAppearanceSmall"
        
@@ -68,7 +68,7 @@
         android:layout_marginTop="20dp"
         android:layout_toLeftOf="@+id/editCp"
         android:ems="10"
-         android:textColor="#FFAAAAAA"
+         android:textColor="#000000"
         android:text="@string/cp"
         android:textAppearance="?android:attr/textAppearanceSmall"
        />
@@ -82,7 +82,7 @@
         android:layout_marginTop="20dp"
         android:layout_toLeftOf="@+id/editSexo"
         android:ems="10"
-         android:textColor="#FFAAAAAA"
+         android:textColor="#000000"
         android:text="@string/sexo"
         android:textAppearance="?android:attr/textAppearanceSmall"
        />
@@ -99,19 +99,17 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
        />
  
-
     <EditText
         android:id="@+id/editPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/txtPassword"
-        android:layout_alignLeft="@+id/imagePerfil"
-        android:ems="10"
-         android:textColor="#FFAAAAAA"
-        android:background="@drawable/my_edittext"
+        android:layout_alignLeft="@+id/editCp"
         android:layout_marginTop="20dp"
+        android:background="@drawable/my_edittext"
+        android:ems="10"
         android:inputType="textPassword"
-        >
+        android:textColor="#000000" >
 
     </EditText>
 
@@ -123,7 +121,7 @@
         android:layout_alignTop="@+id/textEmail"
         android:editable="false"
         android:ems="10"
-         android:textColor="#FFAAAAAA"
+         android:textColor="#000000"
         android:background="@drawable/my_edittext"
         android:inputType="textEmailAddress"
           >
@@ -137,7 +135,7 @@
         android:layout_alignLeft="@+id/editEmail"
         android:layout_alignTop="@+id/textCp"
         android:ems="10"
-         android:textColor="#FFAAAAAA"
+         android:textColor="#000000"
         android:background="@drawable/my_edittext"
         android:onClick="onEditTextClicked"
          >
@@ -152,7 +150,7 @@
         android:layout_alignBottom="@+id/textVSexo"
         android:layout_alignRight="@+id/editPassword"
         android:ems="10"
-         android:textColor="#FFAAAAAA"
+         android:textColor="#000000"
         android:background="@drawable/my_edittext"
       	>
 
@@ -166,7 +164,7 @@
         android:layout_alignLeft="@+id/txtPassword"
         android:layout_alignParentBottom="true"
         android:text="Guardar" 
-         android:textColor="#FFAAAAAA"
+         android:textColor="#000000"
         android:onClick="guardarModiPerfil"/>
 
     <Button

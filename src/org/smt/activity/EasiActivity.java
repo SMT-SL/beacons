@@ -2,83 +2,60 @@ package org.smt.activity;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import java.util.List;
-
-import android.annotation.SuppressLint;
-import android.app.Activity;
-
-import android.app.AlertDialog;
-
-import android.bluetooth.BluetoothAdapter;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentSender;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
-import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-
-import android.widget.ListView;
-
-import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.internal.li;
-import com.google.android.gms.location.LocationClient;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
-
 import org.smt.R;
 import org.smt.adapters.PromotionListAdapter;
 import org.smt.app.BeaconsApp;
+import org.smt.model.BeaconInfoDTO;
+import org.smt.model.OfferDetailsDTO;
+import org.smt.tasks.CheckPromocionesTask;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentSender;
+import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Messenger;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CheckBox;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.location.LocationClient;
 //import org.smt.easibeacons.IBeacon;
 //import org.smt.easibeacons.IBeaconListener;
 //import org.smt.easibeacons.IBeaconProtocol;
-import org.smt.model.BeaconInfoDTO;
-import org.smt.model.OfferDetailsDTO;
-import org.smt.receivers.StartServiceAtBootReceiver;
 //import org.smt.services.AltBeaconService;
 //import org.smt.services.BeaconsMonitoringService;
 //import com.smt.beacons.services.StarterService;
-import org.smt.tasks.CheckPromocionesTask;
-import org.smt.utils.Utils;
 
-public class EasiActivity extends Activity implements BeaconConsumer,
-		BootstrapNotifier, RangeNotifier {
+public class EasiActivity extends Activity implements BeaconConsumer, BootstrapNotifier, RangeNotifier {
 
 	public static final int REQUEST_BLUETOOTH_ENABLE = 1;
 	private CheckBox chkIos, chkAndroid;
@@ -97,6 +74,7 @@ public class EasiActivity extends Activity implements BeaconConsumer,
 	private boolean saliendo;
 	private ProgressBar spinner;
 	private TextView txtState;
+
 	java.util.Timer timer;
 
 	Location mCurrentLocation;
@@ -119,40 +97,29 @@ public class EasiActivity extends Activity implements BeaconConsumer,
 		listBeacons.setAdapter(promotionsAdapter);
 		txtState = (TextView) findViewById(R.id.txtState);
 
-		String locationProviders = Settings.Secure.getString(
-				getContentResolver(),
-				Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+		String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
 
-		if (locationProviders.contains("gps")
-				|| locationProviders.contains("network")) {
+		if (locationProviders.contains("gps") || locationProviders.contains("network")) {
 
-			LocationManager locationManager = (LocationManager) this
-					.getSystemService(Context.LOCATION_SERVICE);
+			LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 			String locationProvider = LocationManager.NETWORK_PROVIDER;
-			mCurrentLocation = locationManager
-					.getLastKnownLocation(locationProvider);
+			mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
 		}
 
 		listBeacons.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				// Toast.makeText(EasiActivity.this,
 				// String.valueOf(((IBeacon)arg0.getAdapter().getItem(arg2)).getMinor()),
 				// Toast.LENGTH_SHORT).show();
 				saliendo = false;
 
-				if (((OfferDetailsDTO) arg0.getAdapter().getItem(arg2))
-						.getOfferType() != 2) {
-					startActivity(new Intent(Intent.ACTION_VIEW, Uri
-							.parse(((OfferDetailsDTO) arg0.getAdapter()
-									.getItem(arg2)).getOfferURL())));
+				if (((OfferDetailsDTO) arg0.getAdapter().getItem(arg2)).getOfferType() != 2) {
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((OfferDetailsDTO) arg0.getAdapter().getItem(arg2)).getOfferURL())));
 				} else {
-					Intent i = new Intent(EasiActivity.this,
-							ImageActivity.class);
-					String web = ((OfferDetailsDTO) arg0.getAdapter().getItem(
-							arg2)).getOfferURL();
+					Intent i = new Intent(EasiActivity.this, ImageActivity.class);
+					String web = ((OfferDetailsDTO) arg0.getAdapter().getItem(arg2)).getOfferURL();
 					i.putExtra("image", web);
 					startActivity(i);
 				}
@@ -181,28 +148,21 @@ public class EasiActivity extends Activity implements BeaconConsumer,
 	protected void onResume() {
 		// ((BeaconsApp)this.getApplication()).setEasyActivity(this);
 		// //----------------------------------------check this error
-		List<BeaconInfoDTO> tempRangeList = ((BeaconsApp) this.getApplication())
-				.getRangeList();
+		List<BeaconInfoDTO> tempRangeList = ((BeaconsApp) this.getApplication()).getRangeList();
 		if (!tempRangeList.equals(list)) {
 			list = tempRangeList;
 			if (mCurrentLocation == null) {
-				LocationManager locationManager = (LocationManager) this
-						.getSystemService(Context.LOCATION_SERVICE);
+				LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 				String locationProvider = LocationManager.NETWORK_PROVIDER;
-				mCurrentLocation = locationManager
-						.getLastKnownLocation(locationProvider);
+				mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
 			}
 			if (mCurrentLocation != null) {
-				new CheckPromocionesTask(this, list,
-						String.valueOf(mCurrentLocation.getLatitude()),
-						String.valueOf(mCurrentLocation.getLongitude()))
-						.execute();
+				new CheckPromocionesTask(this, list, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
 			}
 			actualizarEstadoMensajesError();
 		}
 		actualizarEstadoMensajesError();
-		getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		super.onResume();
 	}
 
@@ -236,8 +196,7 @@ public class EasiActivity extends Activity implements BeaconConsumer,
 
 		case R.id.action_logout:
 
-			SharedPreferences settings = PreferenceManager
-					.getDefaultSharedPreferences(this);
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putString("email", "");
 			editor.commit();
@@ -252,8 +211,7 @@ public class EasiActivity extends Activity implements BeaconConsumer,
 			return true;
 
 		case R.id.action_settings:
-			Intent intent2 = new Intent(EasiActivity.this,
-					SettingsActivity.class);
+			Intent intent2 = new Intent(EasiActivity.this, SettingsActivity.class);
 			startActivity(intent2);
 			saliendo = false;
 			return true;
@@ -341,53 +299,37 @@ public class EasiActivity extends Activity implements BeaconConsumer,
 			}
 		} else {
 
-			Toast.makeText(
-					this,
-					"Error with location service code:"
-							+ connectionResult.getErrorCode(),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Error with location service code:" + connectionResult.getErrorCode(), Toast.LENGTH_SHORT).show();
 		}
 
 	}
 
 	public void didEnterRegion(Region region) {
-		list.add(new BeaconInfoDTO(region.getId2() != null ? region.getId2()
-				.toInt() : 0, region.getId3() != null ? region.getId3().toInt()
-				: 0));
-		String locationProviders = Settings.Secure.getString(
-				getContentResolver(),
-				Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-		if (locationProviders.contains("gps")
-				|| locationProviders.contains("network")) {
+		list.add(new BeaconInfoDTO(region.getId2() != null ? region.getId2().toInt() : 0, region.getId3() != null ? region.getId3().toInt() : 0));
+		String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+		if (locationProviders.contains("gps") || locationProviders.contains("network")) {
 
-			LocationManager locationManager = (LocationManager) this
-					.getSystemService(Context.LOCATION_SERVICE);
+			LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 			String locationProvider = LocationManager.NETWORK_PROVIDER;
-			mCurrentLocation = locationManager
-					.getLastKnownLocation(locationProvider);
+			mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
 			if (mCurrentLocation == null) {
 				locationProvider = LocationManager.GPS_PROVIDER;
 
-				mCurrentLocation = locationManager
-						.getLastKnownLocation(locationProvider);
+				mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
 			}
 		}
 		if (mCurrentLocation != null) {
 
-			new CheckPromocionesTask(this, list, String.valueOf(mCurrentLocation
-					.getLatitude()), String.valueOf(mCurrentLocation
-					.getLongitude())).execute();
+			new CheckPromocionesTask(this, list, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
 		}
 	}
 
 	public void didExitRegion(Region region) {
 
-		Log.e("Region Exit ", "Major: " + region.getId2().toString()
-				+ " Minor: " + region.getId3().toString());
+		Log.e("Region Exit ", "Major: " + region.getId2().toString() + " Minor: " + region.getId3().toString());
 		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
-				if (list.get(i).getMajor() == region.getId2().toInt()
-						&& region.getId3().toInt() == list.get(i).getMinor()) {
+				if (list.get(i).getMajor() == region.getId2().toInt() && region.getId3().toInt() == list.get(i).getMinor()) {
 					list.remove(i);
 				}
 			}
@@ -414,62 +356,52 @@ public class EasiActivity extends Activity implements BeaconConsumer,
 	}
 
 	private void activarLocation() {
-		String locationProviders = Settings.Secure.getString(
-				getContentResolver(),
-				Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+		String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
 		// if gps is disabled and network location services are disabled
 		// the user has no location services and must enable something
-		if (!locationProviders.contains("gps")
-				&& !locationProviders.contains("network")) {
+		if (!locationProviders.contains("gps") && !locationProviders.contains("network")) {
 
 			// build a new alert dialog to inform the user that they have no
 			// location services enabled
 			new AlertDialog.Builder(this)
 
-					// set the message to display to the user
+			// set the message to display to the user
 					.setMessage("No Location Services Enabled")
 					// add the 'positive button' to the dialog and give it a
 					// click listener
 
-					.setPositiveButton("Enable Location Services",
-							new DialogInterface.OnClickListener() {
-								// setup what to do when clicked
-								public void onClick(DialogInterface dialog,
-										int id) {
-									// start the settings menu on the correct
-									// screen for the user
-									startActivity(new Intent(
-											Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-								}
-								// add the 'negative button' to the dialog and
-								// give it a click listener
-							})
+					.setPositiveButton("Enable Location Services", new DialogInterface.OnClickListener() {
+						// setup what to do when clicked
+						public void onClick(DialogInterface dialog, int id) {
+							// start the settings menu on the correct
+							// screen for the user
+							startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+						}
+						// add the 'negative button' to the dialog and
+						// give it a click listener
+					})
 
-					.setNegativeButton("Close",
-							new DialogInterface.OnClickListener() {
-								// setup what to do when clicked
-								public void onClick(DialogInterface dialog,
-										int id) {
-									// remove the dialog
-									dialog.cancel();
-									// finish();
+					.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+						// setup what to do when clicked
+						public void onClick(DialogInterface dialog, int id) {
+							// remove the dialog
+							dialog.cancel();
+							// finish();
 
-								}
-								// finish creating the dialog and show to the
-								// user
-							}).create().show();
+						}
+						// finish creating the dialog and show to the
+						// user
+					}).create().show();
 		}
 
 	}
 
 	private void activarBluetooth() {
-		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
-				.getDefaultAdapter();
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (mBluetoothAdapter != null) {
 			// Device does not support Bluetooth
 			if (!mBluetoothAdapter.isEnabled()) {
-				Intent enableBtIntent = new Intent(
-						BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 			}
 		}
@@ -492,22 +424,19 @@ public class EasiActivity extends Activity implements BeaconConsumer,
 	}
 
 	private boolean isLocationActivado() {
-		String locationProviders = Settings.Secure.getString(
-				getContentResolver(),
-				Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-		if (!locationProviders.contains("gps")
-				&& !locationProviders.contains("network")) {
+		String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+		if (!locationProviders.contains("gps") && !locationProviders.contains("network")) {
 			return false;
 		}
 		return true;
 	}
 
 	private boolean isBloothActivated() {
-		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter
-				.getDefaultAdapter();
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
 			return false;
 		}
 		return true;
 	}
+
 }

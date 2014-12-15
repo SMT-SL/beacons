@@ -12,6 +12,7 @@ import org.smt.fragments.PerfilFragment;
 import org.smt.fragments.PromocionesFragment;
 import org.smt.model.BeaconInfoDTO;
 import org.smt.model.NavDrawerItem;
+import org.smt.model.WalletPromocion;
 import org.smt.tasks.CheckPromocionesTask;
 
 import android.app.Activity;
@@ -57,7 +58,7 @@ public class MainActivity extends Activity {
 	private final static int REQUEST_ENABLE_BT = 1;
 	// used to store app title
 	private CharSequence mTitle;
-
+	private static ArrayList<WalletPromocion> walletPromocionList;
 	// slide menu items
 	private String[] navMenuTitles;
 	private TypedArray navMenuIcons;
@@ -141,6 +142,18 @@ public class MainActivity extends Activity {
 			// cvf asdf asdf asdf asdf asdf asdfa sdfdrawer item
 			displayView(position);
 		}
+	}
+
+	@Override
+	protected void onStop() {
+		((BeaconsApp) this.getApplication()).setEasyActivity(null);
+		super.onStop();
+	}
+
+	@Override
+	protected void onPause() {
+		((BeaconsApp) this.getApplication()).setEasyActivity(null);
+		super.onPause();
 	}
 
 	@Override
@@ -235,21 +248,26 @@ public class MainActivity extends Activity {
 		mDrawerToggle.onConfigurationChanged(newConfig);
 	}
 
-	public void didEnterRegion(Region region) {
+	public void didEnterRegion(Region region, Location mlocation) {
 		list.add(new BeaconInfoDTO(region.getId2() != null ? region.getId2().toInt() : 0, region.getId3() != null ? region.getId3().toInt() : 0));
 		@SuppressWarnings("deprecation")
 		String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-		if (locationProviders.contains("gps") || locationProviders.contains("network")) {
+		if (mlocation == null) {
+			if (locationProviders.contains("gps") || locationProviders.contains("network")) {
 
-			LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-			String locationProvider = LocationManager.NETWORK_PROVIDER;
-			mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
-			if (mCurrentLocation == null) {
-				locationProvider = LocationManager.GPS_PROVIDER;
-
+				LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+				String locationProvider = LocationManager.NETWORK_PROVIDER;
 				mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
+				if (mCurrentLocation == null) {
+					locationProvider = LocationManager.GPS_PROVIDER;
+
+					mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
+				}
 			}
+		} else {
+			mCurrentLocation = mlocation;
 		}
+
 		if (mCurrentLocation != null) {
 
 			new CheckPromocionesTask(this, list, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
@@ -407,5 +425,20 @@ public class MainActivity extends Activity {
 				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 			}
 		}
+	}
+
+	public static ArrayList<WalletPromocion> getWalletPromocionList() {
+		return walletPromocionList;
+	}
+
+	public static void setWalletPromocionList(ArrayList<WalletPromocion> walletPromocionList) {
+		MainActivity.walletPromocionList = walletPromocionList;
+	}
+
+	public static void ddToPromocionList(WalletPromocion wPromocion) {
+		if (walletPromocionList == null) {
+			walletPromocionList = new ArrayList<WalletPromocion>();
+		}
+		walletPromocionList.add(wPromocion);
 	}
 }
