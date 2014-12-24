@@ -7,10 +7,10 @@ import org.altbeacon.beacon.Region;
 import org.smt.R;
 import org.smt.adapters.NavDrawerListAdapter;
 import org.smt.app.BeaconsApp;
-import org.smt.fragments.FindPeopleFragment;
 import org.smt.fragments.PerfilFragment;
 import org.smt.fragments.PromocionesFragment;
-import org.smt.model.BeaconInfoDTO;
+import org.smt.fragments.WalletFragment;
+import org.smt.model.RegionInfoDTO;
 import org.smt.model.NavDrawerItem;
 import org.smt.model.OfferDetailsDTO;
 import org.smt.model.WalletPromocion;
@@ -42,21 +42,21 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
+;
 
-import com.google.android.gms.location.LocationClient;
-
-public class MainActivity extends Activity {
-	private List<BeaconInfoDTO> list = new ArrayList<BeaconInfoDTO>();
-
+public class MainActivity extends Activity  {
+	public static  List<RegionInfoDTO> regionsEncontrado = new ArrayList<RegionInfoDTO>();
+	
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
-	Location mCurrentLocation;
-	LocationClient mLocationClient;
+	public static Location mCurrentLocation;
+//	private LocationClient mLocationClient;
 	// nav drawer title
 	private CharSequence mDrawerTitle;
 	private final static int REQUEST_ENABLE_BT = 1;
+	private static final String TAG = "MainActivity findlocation";
 	// used to store app title
 	private CharSequence mTitle;
 	private static ArrayList<WalletPromocion> walletPromocionList;
@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+	
 		mTitle = mDrawerTitle = getTitle();
 
 		// load slide menu items
@@ -131,6 +131,8 @@ public class MainActivity extends Activity {
 			// on first time display view for first nav item
 			displayView(0);
 		}
+//		mLocationClient = new LocationClient(this, this, this);
+//		mLocationClient.connect();
 	}
 
 	/**
@@ -200,7 +202,7 @@ public class MainActivity extends Activity {
 			fragment = new PromocionesFragment(this);
 			break;
 		case 1:
-			fragment = new FindPeopleFragment();
+			fragment = new WalletFragment(this);
 			break;
 		case 2:
 			fragment = new PerfilFragment();
@@ -250,83 +252,132 @@ public class MainActivity extends Activity {
 	}
 
 	public void didEnterRegion(Region region, Location mlocation) {
-		list.add(new BeaconInfoDTO(region.getId2() != null ? region.getId2().toInt() : 0, region.getId3() != null ? region.getId3().toInt() : 0));
-		@SuppressWarnings("deprecation")
-		String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+		regionsEncontrado.add(new RegionInfoDTO(region.getId2() != null ? region.getId2().toInt() : 0, region.getId3() != null ? region.getId3().toInt() : 0));
 		if (mlocation == null) {
-			if (locationProviders.contains("gps") || locationProviders.contains("network")) {
-
-				LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-				String locationProvider = LocationManager.NETWORK_PROVIDER;
-				mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
-				if (mCurrentLocation == null) {
-					locationProvider = LocationManager.GPS_PROVIDER;
-
-					mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
-				}
-			}
+			mCurrentLocation=((BeaconsApp) this.getApplication()).getLocation();
 		} else {
 			mCurrentLocation = mlocation;
 		}
 
 		if (mCurrentLocation != null) {
 
-			new CheckPromocionesTask(this, list, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
+			new CheckPromocionesTask(this, regionsEncontrado, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
+		}else{
+			((Activity) this).runOnUiThread(new Runnable() {
+	    	    public void run() {
+	    	    	((TextView) findViewById(R.id.txtState)).setText("No se ha podido obtener localizacion");
+	     	    	    		
+	    	    }
+	    	});
+			
 		}
 	}
+	
 
 	@Override
 	protected void onResume() {
 		((BeaconsApp) this.getApplication()).setEasyActivity(this);
-		List<BeaconInfoDTO> tempRangeList = ((BeaconsApp) this.getApplication()).getRangeList();
-		if (!tempRangeList.equals(list)) {
-			list = tempRangeList;
-			if (mCurrentLocation == null) {
-				LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-				String locationProvider = LocationManager.NETWORK_PROVIDER;
-				mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
-			}
-			if (mCurrentLocation != null) {
-				new CheckPromocionesTask(this, list, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
-			}
-			actualizarEstadoMensajesError();
+		List<RegionInfoDTO> tempRangeList = ((BeaconsApp) this.getApplication()).getRangeList();
+		if (mCurrentLocation == null) {
+			mCurrentLocation=((BeaconsApp) this.getApplication()).getLocation();
 		}
-		actualizarEstadoMensajesError();
+		if (!tempRangeList.equals(regionsEncontrado)) {
+			regionsEncontrado = tempRangeList;
+		}
+		if (mCurrentLocation != null&& regionsEncontrado!=null &&regionsEncontrado.size()>0) {
+				new CheckPromocionesTask(this, regionsEncontrado, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
+			}else{
+				((Activity) this).runOnUiThread(new Runnable() {
+		    	    public void run() {
+		    	    	((TextView) findViewById(R.id.txtState)).setText("No se ha podido obtener localizacion");
+		     	    	    		
+		    	    }
+		    	});
+			}
+		
+//		actualizarEstadoMensajesError();
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		displayView(0);
-
+//		BeaconsApp.clearAllNotificaciones();
+		((BeaconsApp) super.getApplication()).clearAllNotificaciones();
 		super.onResume();
 	}
 
 	public void didExitRegion(Region region) {
 
 		Log.e("Region Exit ", "Major: " + region.getId2().toString() + " Minor: " + region.getId3().toString());
-		if (list != null && list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
-				if (list.get(i).getMajor() == region.getId2().toInt() && region.getId3().toInt() == list.get(i).getMinor()) {
-					list.remove(i);
+		if (regionsEncontrado != null && regionsEncontrado.size() > 0) {
+			for (int i = 0; i < regionsEncontrado.size(); i++) {
+				if (regionsEncontrado.get(i).getMajor() == region.getId2().toInt() && region.getId3().toInt() == regionsEncontrado.get(i).getMinor()) {
+					regionsEncontrado.remove(i);
 				}
 			}
 
 		}
 
+		if(PromocionesFragment.promotions!=null&&PromocionesFragment.promotions.size()>0){
+//			int i = users.size()-1; i >= 0; i--
+			for(int i=PromocionesFragment.promotions.size()-1;i>=0;i--){
+				if(PromocionesFragment.promotions.get(i).getMajor()==region.getId2().toInt()&&PromocionesFragment.promotions.get(i).getMinor()==region.getId3().toInt()){
+					PromocionesFragment.promotions.remove(i);
+				}
+			}
+		}
+		
+		if(PromocionesFragment.promotions.size()==0){
+			PromocionesFragment.actualizarEstadoMensajesError();
+		}
+		
+		((Activity) this).runOnUiThread(new Runnable() {
+    	    public void run() {
+    	    	PromocionesFragment.promotionsAdapter.notifyDataSetChanged();
+     	    	    		
+    	    }
+    	});
+		
 	}
 
-	private void actualizarEstadoMensajesError() {
-		RelativeLayout bluetoothMessage = (RelativeLayout) findViewById(R.id.blueToothError);
-		final RelativeLayout locationMessage = (RelativeLayout) findViewById(R.id.localizacionError);
-		if (isLocationActivado()) {
-			locationMessage.setVisibility(View.GONE);
-		} else {
-			locationMessage.setVisibility(View.VISIBLE);
-		}
-
-		if (isBloothActivated()) {
-			bluetoothMessage.setVisibility(View.GONE);
-		} else {
-			bluetoothMessage.setVisibility(View.VISIBLE);
-		}
-	}
+//	private void actualizarEstadoMensajesError() {
+//		RelativeLayout bluetoothMessage = (RelativeLayout) findViewById(R.id.blueToothError);
+//		final RelativeLayout locationMessage = (RelativeLayout) findViewById(R.id.localizacionError);
+////		txtState.setText("Comprobando la configuracion");
+//		boolean isBluetoothOk=isBloothActivated();
+//		boolean isLocationActivado=isLocationActivado();
+//		boolean isConfiguracionOk=false;
+//		
+//		if (isLocationActivado && isBluetoothOk) {
+//			locationMessage.setVisibility(View.GONE);
+//			bluetoothMessage.setVisibility(View.GONE);
+//			isConfiguracionOk=true;
+//		} else if(!isLocationActivado && !isBluetoothOk) {
+//			locationMessage.setVisibility(View.VISIBLE);
+//			bluetoothMessage.setVisibility(View.VISIBLE);
+//			isConfiguracionOk=false;
+//			
+//		}else if(!isLocationActivado){
+//			locationMessage.setVisibility(View.VISIBLE);
+//			bluetoothMessage.setVisibility(View.GONE);
+//			isConfiguracionOk=false;
+//			
+//		}else if(!isBluetoothOk){
+//			locationMessage.setVisibility(View.GONE);
+//			bluetoothMessage.setVisibility(View.VISIBLE);
+//			isConfiguracionOk=false;
+//		}
+//
+//		if(!isConfiguracionOk){
+////			txtState.setText("Error en configuracion, compruebalo ");
+//		}
+//		if(MainActivity.mCurrentLocation==null&&isConfiguracionOk){
+////			txtState.setText("No se ha podido obtener localizacion");
+//		}
+//		
+//		if(PromocionesFragment.promotions!=null && PromocionesFragment.promotions.size()>0&&isConfiguracionOk){
+//			txtState.setText("Promicones encotnradas");
+//			spinner.setVisibility(View.GONE);
+//			
+//		}
+//	}
 
 	private boolean isLocationActivado() {
 		@SuppressWarnings("deprecation")
@@ -363,7 +414,7 @@ public class MainActivity extends Activity {
 
 			break;
 		}
-		actualizarEstadoMensajesError();
+		PromocionesFragment.actualizarEstadoMensajesError();
 	}
 
 	public void onEditTextClicked(View view) {
@@ -435,19 +486,49 @@ public class MainActivity extends Activity {
 	public static void setWalletPromocionList(ArrayList<WalletPromocion> walletPromocionList) {
 		MainActivity.walletPromocionList = walletPromocionList;
 	}
+	public static void addToWalletList(OfferDetailsDTO promocionAguardar) {
+		if(!isExistPromocion(promocionAguardar)){
+			WalletPromocion wPromocionObject = new WalletPromocion();
+			if (walletPromocionList == null) {
+				walletPromocionList = new ArrayList<WalletPromocion>();
+			}
+			wPromocionObject.setDescription(promocionAguardar.getDescription());
+			wPromocionObject.setLocation("");
+			wPromocionObject.setName(promocionAguardar.getName());
+			wPromocionObject.setOfferId(promocionAguardar.getOfferId());
+			wPromocionObject.setOfferURL(promocionAguardar.getOfferURL());
+			wPromocionObject.setThumbnail(promocionAguardar.getThumbnail());
 
-	public static void ddToPromocionList(OfferDetailsDTO wPromocion) {
-		WalletPromocion wPromocionObject = new WalletPromocion();
-		if (walletPromocionList == null) {
-			walletPromocionList = new ArrayList<WalletPromocion>();
+			walletPromocionList.add(wPromocionObject);
 		}
-		wPromocionObject.setDescription(wPromocion.getDescription());
-		wPromocionObject.setLocation("");
-		wPromocionObject.setName(wPromocion.getName());
-		wPromocionObject.setOfferId(wPromocion.getOfferId());
-		wPromocionObject.setOfferURL(wPromocion.getOfferURL());
-		wPromocionObject.setThumbnail(wPromocion.getThumbnail());
-
-		walletPromocionList.add(wPromocionObject);
+		
 	}
+	
+	private static boolean isExistPromocion(OfferDetailsDTO promocionAguardar){
+		Boolean existePromocion=false;
+		if(walletPromocionList!=null&& walletPromocionList.size()>0){
+			for(int i=0;i<walletPromocionList.size();i++){
+				if(walletPromocionList.get(i).getOfferId()==promocionAguardar.getOfferId()){
+					i=walletPromocionList.size();
+					existePromocion=true;
+				}
+			}
+		}
+		
+		return existePromocion;
+	}
+
+	public static void removeFromWalletList(WalletPromocion promo) {
+		if(walletPromocionList!=null&& walletPromocionList.size()>0){
+			for(int i=0;i<walletPromocionList.size();i++){
+				if(walletPromocionList.get(i).getOfferId()==promo.getOfferId()){
+					walletPromocionList.remove(i);
+					WalletFragment.walletListAdapter.notifyDataSetChanged();
+					
+				}
+			}
+		}
+		
+	}
+
 }

@@ -33,7 +33,7 @@
 <!--             android:name=".activity.LoginActivity" -->
         <activity
 
-			 android:name="org.smt.activity.MainActivity"
+			 android:name="org.smt.activity.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,7 +42,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.EasiActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
             </intent-filter>

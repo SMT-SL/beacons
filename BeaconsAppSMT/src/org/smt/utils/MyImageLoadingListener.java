@@ -17,7 +17,7 @@ public class MyImageLoadingListener implements ImageLoadingListener{
 
 	@Override
 	public void onLoadingStarted(String imageUri, View view) {
-		((ImageView) view).setImageResource(R.drawable.logo_smt);
+		((ImageView) view).setImageResource(R.drawable.ic_launcher);
 	}
 
 	@Override

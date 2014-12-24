@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import org.smt.R;
 import org.smt.activity.ImageActivity;
 import org.smt.app.BeaconsApp;
-import org.smt.model.BeaconInfoDTO;
+import org.smt.model.RegionInfoDTO;
 import org.smt.model.OfferDetailsDTO;
 import org.smt.utils.GestorRed;
 
@@ -30,11 +30,11 @@ public class ExitBeaconsTask extends AsyncTask<Void, Integer, JSONArray> {
 
 	private Context context;
 	// private ProgressDialog pDialog;
-	private List<BeaconInfoDTO> beacons;
+	private List<RegionInfoDTO> beacons;
 	private String lat;
 	private String lon;
 
-	public ExitBeaconsTask(Context context, List<BeaconInfoDTO> beacons, String lat, String lon) {
+	public ExitBeaconsTask(Context context, List<RegionInfoDTO> beacons, String lat, String lon) {
 		this.context = context;
 		this.beacons = beacons;
 		this.lat = lat;

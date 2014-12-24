@@ -25,7 +25,7 @@ import org.smt.R;
 import org.smt.activity.EasiActivity;
 import org.smt.activity.ImageActivity;
 import org.smt.activity.MainActivity;
-import org.smt.model.BeaconInfoDTO;
+import org.smt.model.RegionInfoDTO;
 import org.smt.model.OfferDetailsDTO;
 import org.smt.app.BeaconsApp;
 import org.smt.fragments.PromocionesFragment;
@@ -39,14 +39,14 @@ import org.smt.utils.GestorRed;
 public class CheckPromocionesTask extends AsyncTask<Void, Integer, JSONArray>{
 
 	private Context context;
-	private List<BeaconInfoDTO> beacons;
+	private List<RegionInfoDTO> regions;
 	private String lat;
 	private String lon;
 
-	public CheckPromocionesTask(Context context,List<BeaconInfoDTO> beacons, String lat, String lon) {
+	public CheckPromocionesTask(Context context,List<RegionInfoDTO> regions, String lat, String lon) {
 	    
 	 	this.context = context;
-		this.beacons = beacons;
+		this.regions = regions;
 		this.lat = lat;
 		this.lon = lon;
 	}
@@ -64,15 +64,18 @@ public class CheckPromocionesTask extends AsyncTask<Void, Integer, JSONArray>{
 	protected JSONArray doInBackground(Void... jsonInputArr) {
 
 		try{
+			if (context instanceof MainActivity){ //Comprobar si se puede mostrar mensaje o no
+					messageToDisplay("Buscando promociones ......");
+				}
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 				long userId = prefs.getLong("UserId", 0);
 				JSONObject jsonInput = new JSONObject();
 				JSONArray beacons = new JSONArray();
 		
-				for (int i = 0; i<this.beacons.size(); i++){
+				for (int i = 0; i<this.regions.size(); i++){
 					JSONObject beacon = new JSONObject();
-					beacon.put("major", this.beacons.get(i).getMajor() );
-					beacon.put("minor", this.beacons.get(i).getMinor());
+					beacon.put("major", this.regions.get(i).getMajor() );
+					beacon.put("minor", this.regions.get(i).getMinor());
 					beacons.put(beacon);
 				}
 				
@@ -93,6 +96,7 @@ public class CheckPromocionesTask extends AsyncTask<Void, Integer, JSONArray>{
 	
 	@Override
 	public void onPostExecute(JSONArray jsonResult){
+		
 		if (jsonResult != null){
 			if(PromocionesFragment.promotions!=null){
 				PromocionesFragment.promotions.clear();
@@ -113,6 +117,7 @@ public class CheckPromocionesTask extends AsyncTask<Void, Integer, JSONArray>{
 					}
 					
 					if (context instanceof MainActivity){
+						messageToDisplay("Buscando promociones ......");
 //						if (context instanceof EasiActivity){	
 						boolean exists = false;
 						for (OfferDetailsDTO o : PromocionesFragment.promotions){
@@ -151,9 +156,10 @@ public class CheckPromocionesTask extends AsyncTask<Void, Integer, JSONArray>{
 							notifBigIcon = ((BeaconsApp) context.getApplicationContext()).getImageLoader().loadImageSync(offer.getOfferURL());
 						}
 				  		
-						notifTitle = "Bienvenido!";
+						notifTitle = offer.getName();
+						BeaconsApp.listOffer.add(offer);
 
-						notifSmallIcon = R.drawable.logo_smt;
+						notifSmallIcon = R.drawable.ic_launcher;
 				  		notifId = offer.getOfferId();
 						PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_ONE_SHOT);
 				   	  	NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
@@ -215,12 +221,13 @@ public class CheckPromocionesTask extends AsyncTask<Void, Integer, JSONArray>{
     	    public void run() {
     	    	
     	    	 ProgressBar spinner=(ProgressBar) activity.findViewById(R.id.pbHeaderProgress);
-    	    	if(display){
-    	    		spinner.setVisibility(View.VISIBLE);
-    	    	}else{
-    	    		spinner.setVisibility(View.GONE);
+    	    	if(spinner!=null){
+    	    		if(display){
+        	    		spinner.setVisibility(View.VISIBLE);
+        	    	}else{
+        	    		spinner.setVisibility(View.GONE);
+        	    	}	
     	    	}
-    	    
     	               	    	    		
     	    }
     	});

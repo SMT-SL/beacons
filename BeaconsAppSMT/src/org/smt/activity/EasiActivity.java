@@ -12,7 +12,7 @@ import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.smt.R;
 import org.smt.adapters.PromotionListAdapter;
 import org.smt.app.BeaconsApp;
-import org.smt.model.BeaconInfoDTO;
+import org.smt.model.RegionInfoDTO;
 import org.smt.model.OfferDetailsDTO;
 import org.smt.tasks.CheckPromocionesTask;
 
@@ -67,7 +67,7 @@ public class EasiActivity extends Activity implements BeaconConsumer, BootstrapN
 	private static ArrayList<Beacon> _beacons;
 	public static ArrayList<OfferDetailsDTO> promotions;
 	public static PromotionListAdapter promotionsAdapter;
-	private List<BeaconInfoDTO> list = new ArrayList<BeaconInfoDTO>();
+	private List<RegionInfoDTO> list = new ArrayList<RegionInfoDTO>();
 	private Messenger serviceMessenger = null;
 	private Menu _menu;
 	private final static int REQUEST_ENABLE_BT = 1;
@@ -148,7 +148,7 @@ public class EasiActivity extends Activity implements BeaconConsumer, BootstrapN
 	protected void onResume() {
 		// ((BeaconsApp)this.getApplication()).setEasyActivity(this);
 		// //----------------------------------------check this error
-		List<BeaconInfoDTO> tempRangeList = ((BeaconsApp) this.getApplication()).getRangeList();
+		List<RegionInfoDTO> tempRangeList = ((BeaconsApp) this.getApplication()).getRangeList();
 		if (!tempRangeList.equals(list)) {
 			list = tempRangeList;
 			if (mCurrentLocation == null) {
@@ -305,7 +305,7 @@ public class EasiActivity extends Activity implements BeaconConsumer, BootstrapN
 	}
 
 	public void didEnterRegion(Region region) {
-		list.add(new BeaconInfoDTO(region.getId2() != null ? region.getId2().toInt() : 0, region.getId3() != null ? region.getId3().toInt() : 0));
+		list.add(new RegionInfoDTO(region.getId2() != null ? region.getId2().toInt() : 0, region.getId3() != null ? region.getId3().toInt() : 0));
 		String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
 		if (locationProviders.contains("gps") || locationProviders.contains("network")) {
 

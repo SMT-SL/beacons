@@ -1,7 +1,6 @@
 package org.smt.adapters;
 
 import org.smt.R;
-import org.smt.activity.EasiActivity;
 import org.smt.activity.MainActivity;
 import org.smt.app.BeaconsApp;
 import org.smt.fragments.PromocionesFragment;
@@ -21,13 +20,10 @@ import android.widget.Toast;
 
 public class PromotionListAdapter extends BaseAdapter {
 
-	// List<OfferDetailsDTO> beacons;
-	EasiActivity act;
 	Context context;
 
 	public PromotionListAdapter(Context context) {
 		super();
-		// beacons = _beacons;
 		this.context = context;
 
 	}
@@ -40,7 +36,7 @@ public class PromotionListAdapter extends BaseAdapter {
 
 		if (convertView == null) {
 			holder = new PromotionListHolder();
-			convertView = li.inflate(R.layout.listitem_device, parent, false);
+			convertView = li.inflate(R.layout.listitem_promociones, parent, false);
 
 			holder.textPromo = ((TextView) convertView.findViewById(R.id.offer_name));
 			holder.imagePromo = (ImageView) convertView.findViewById(R.id.image_promo);
@@ -60,7 +56,7 @@ public class PromotionListAdapter extends BaseAdapter {
 			public void onClick(View v) {
 				Toast toast = Toast.makeText(context, "Promocion guardado en tu Wallet", Toast.LENGTH_SHORT);
 				toast.show();
-				MainActivity.ddToPromocionList(promo);
+				MainActivity.addToWalletList(promo);
 
 			}
 		});
@@ -69,7 +65,7 @@ public class PromotionListAdapter extends BaseAdapter {
 			holder.textDesc.setText(promo.getDescription());
 		}
 		// holder.imagePromo.setImageDrawable(context.getResources().getDrawable(R.drawable.frigo_logo_blanco_cuadrado));
-		holder.imagePromo.setImageDrawable(context.getResources().getDrawable(R.drawable.logo_smt));
+		holder.imagePromo.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_launcher));
 
 		if (promo.getOfferType() == 2) {
 			((BeaconsApp) context.getApplicationContext()).getImageLoader().displayImage(promo.getOfferURL(), holder.imagePromo, new MyImageLoadingListener());

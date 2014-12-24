@@ -16,11 +16,13 @@ import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
 import org.smt.activity.LoginActivity;
 import org.smt.activity.MainActivity;
-import org.smt.model.BeaconInfoDTO;
+import org.smt.model.OfferDetailsDTO;
+import org.smt.model.RegionInfoDTO;
 import org.smt.model.IBeaconsFound;
 import org.smt.tasks.CheckPromocionesTask;
 
 import android.app.Application;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
@@ -46,12 +48,14 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 	private static final String TAG = "BeaconsApp";
 	private BeaconManager mBeaconManager;
 	private Region mAllBeaconsRegion;
-	private List<BeaconInfoDTO> list = new ArrayList<BeaconInfoDTO>();
+	public static List<RegionInfoDTO> regionsFound = new ArrayList<RegionInfoDTO>();
+	public static List<OfferDetailsDTO> listOffer=new ArrayList<OfferDetailsDTO>();
 	private BackgroundPowerSaver mBackgroundPowerSaver;
 	@SuppressWarnings("unused")
 	private RegionBootstrap mRegionBootstrap;
 	private Location mCurrentLocation;
 	private LocationClient mLocationClient;
+	private List<Region> mListregions;
 
 	@Override
 	public void onCreate() {
@@ -67,7 +71,6 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 		mLocationClient.connect();
 		// ********************* Configuracion de Beacons
 		// *************************
-		mAllBeaconsRegion = new Region("all beacons", null, Identifier.fromInt(1), Identifier.fromInt(1));
 		mBeaconManager = BeaconManager.getInstanceForApplication(this);
 		mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:0-3=4c000215,i:4-19,i:20-21,i:22-23,p:24-24")); // iBeacons
 
@@ -77,7 +80,26 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 		setmBackgroundPowerSaver(new BackgroundPowerSaver(this));
 		mBeaconManager.setForegroundBetweenScanPeriod(6000);
 		mBeaconManager.setBackgroundBetweenScanPeriod(9000);
-		mRegionBootstrap = new RegionBootstrap(this, mAllBeaconsRegion);
+//		Region region1 = new Region("myIdentifier1", null, Identifier.parse("1"), Identifier.parse("1"));        
+//		Region region2 = new Region("myIdentifier2", null, Identifier.parse("1"), Identifier.parse("2"));   
+
+//		try {
+//			mBeaconManager.startMonitoringBeaconsInRegion(region1);
+//			mBeaconManager.startMonitoringBeaconsInRegion(region2);   
+//		} catch (RemoteException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		mListregions=new ArrayList<Region>();
+//		mAllBeaconsRegion = new Region("all beacons", null, Identifier.fromInt(1), Identifier.fromInt(2));
+		mListregions.add(new Region("myIdentifier1", null, Identifier.fromInt(1), Identifier.fromInt(1)));
+		mListregions.add(new Region("myIdentifier2", null, Identifier.fromInt(1), Identifier.fromInt(2)));
+		mListregions.add(new Region("myIdentifier3", null, Identifier.fromInt(1), Identifier.fromInt(3)));
+		mListregions.add(new Region("myIdentifier4", null, Identifier.fromInt(1), Identifier.fromInt(4)));
+		mListregions.add(new Region("myIdentifier5", null, Identifier.fromInt(1), Identifier.fromInt(5)));
+		mListregions.add(new Region("myIdentifier6", null, Identifier.fromInt(1), Identifier.fromInt(6)));
+		mRegionBootstrap = new RegionBootstrap(this, mListregions);
+		
 		// super.onCreate();
 	}
 
@@ -140,7 +162,7 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 	public void didEnterRegion(Region region) {
 		boolean isNewRegion = isNewRegion(region);
 		if (isNewRegion) {
-			list.add(new BeaconInfoDTO(region.getId2() != null ? region.getId2().toInt() : 0, region.getId3() != null ? region.getId3().toInt() : 0));
+			regionsFound.add(new RegionInfoDTO(region.getId2() != null ? region.getId2().toInt() : 0, region.getId3() != null ? region.getId3().toInt() : 0));
 			if (easiActivity != null) {
 				mCurrentLocation = mLocationClient.getLastLocation();
 				easiActivity.didEnterRegion(region, mCurrentLocation);
@@ -157,7 +179,7 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 					mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
 
 					if (mCurrentLocation != null) {
-						new CheckPromocionesTask(this, list, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
+						new CheckPromocionesTask(this, regionsFound, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
 					}
 				}
 
@@ -166,15 +188,15 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 
 	}
 
-	public List<BeaconInfoDTO> getRangeList() {
-		return this.list;
+	public List<RegionInfoDTO> getRangeList() {
+		return this.regionsFound;
 	}
 
 	public boolean isNewRegion(Region region) {
 		Log.e("Beacon found", "Major: " + region.getId2() != null ? region.getId2().toString() : "null" + " Minor: " + region.getId3() != null ? region.getId3().toString() : "null");
 
 		boolean exists = true;
-		for (BeaconInfoDTO bi : list) {
+		for (RegionInfoDTO bi : regionsFound) {
 			if (bi.getMajor() == (region.getId2() != null ? region.getId2().toInt() : 0) && (region.getId3() != null ? region.getId3().toInt() : 0) == bi.getMinor()) {
 				exists = false;
 			}
@@ -186,18 +208,35 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 	public void didExitRegion(Region region) {
 		if (easiActivity != null) {
 			easiActivity.didExitRegion(region);
+		}else{
+			NotificationManager nManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+			for(int i=listOffer.size()-1;i>=0;i--){
+				if(listOffer.get(i).getMajor()==region.getId2().toInt()&&listOffer.get(i).getMinor()==region.getId3().toInt()){
+					nManager.cancel(listOffer.get(i).getOfferId());
+					listOffer.remove(i);
+				}
+			}
 		}
 		Log.e("Region Exit ", "Major: " + region.getId2().toString() + " Minor: " + region.getId3().toString());
-		if (list != null && list.size() > 0) {
-			for (int i = 0; i < list.size(); i++) {
-				if (list.get(i).getMajor() == region.getId2().toInt() && region.getId3().toInt() == list.get(i).getMinor()) {
-					list.remove(i);
+		if (regionsFound != null && regionsFound.size() > 0) {
+			for (int i = 0; i < regionsFound.size(); i++) {
+				if (regionsFound.get(i).getMajor() == region.getId2().toInt() && region.getId3().toInt() == regionsFound.get(i).getMinor()) {
+					regionsFound.remove(i);
 				}
 			}
 
 		}
+		
+		
 	}
-
+	public  void clearAllNotificaciones(){
+		NotificationManager nManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+		for(int i=listOffer.size()-1;i>=0;i--){
+				nManager.cancel(listOffer.get(i).getOfferId());
+				listOffer.remove(i);
+			}
+		
+	}
 	@Override
 	public void didRangeBeaconsInRegion(Collection<Beacon> arg0, Region arg1) {
 		Log.e("BeaconsApp", "****************** beacons *****************");
@@ -205,6 +244,7 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 	}
 
 	public Location getLocation() {
+		mCurrentLocation = mLocationClient.getLastLocation();
 		return this.mCurrentLocation;
 	}
 
@@ -225,6 +265,11 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		mCurrentLocation = mLocationClient.getLastLocation();
+		//Buscar los promociones relacionadas con beacons ya encontradas. Tenemos beacons pero no teniamos location por eso volvemos a realizar peticion
+//		if(easiActivity!=null && list!=null&&list.size()>0) {
+//			easiActivity.obtnerPromocionesConLocalizacion(list,mCurrentLocation);
+//			
+//		}
 
 	}
 
