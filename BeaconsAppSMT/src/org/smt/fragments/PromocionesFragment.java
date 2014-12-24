@@ -8,6 +8,7 @@ import org.smt.activity.MainActivity;
 import org.smt.adapters.PromotionListAdapter;
 import org.smt.model.OfferDetailsDTO;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -111,7 +112,7 @@ public class PromocionesFragment extends Fragment {
 			}
 		});
 
-		actualizarEstadoMensajesError();
+		actualizarEstadoApp();
 		// saliendo = true;
 		return rootView;
 	}
@@ -120,42 +121,57 @@ public class PromocionesFragment extends Fragment {
 	     super.onResume();
 	  }
 
-	public static void actualizarEstadoMensajesError() {
-		txtState.setText("Comprobando la configuracion");
-		RelativeLayout bluetoothMessage = (RelativeLayout) rootView.findViewById(R.id.blueToothError);
-		final RelativeLayout locationMessage = (RelativeLayout) rootView.findViewById(R.id.localizacionError);
+	 private static void actualizarMensajeConfiguracion(final int locationState,final int bluetoohState){
+		 
+		 final Activity activity = (Activity) context;
+			((Activity) context).runOnUiThread(new Runnable() {
+	    	    public void run() {
+	    	    	final RelativeLayout locationMessage = (RelativeLayout) rootView.findViewById(R.id.localizacionError);
+	    	    	final RelativeLayout bluetoothMessage = (RelativeLayout) rootView.findViewById(R.id.blueToothError);
+	    	    	if(locationMessage!=null){
+	    		    	locationMessage.setVisibility(locationState);
+	    	    	}
+	    	    	if(bluetoothMessage!=null){
+	    	    		bluetoothMessage.setVisibility(bluetoohState);
+	    	    	}
+	    	    	
+	    	    }
+	    	});
+	 }
+	public static void actualizarEstadoApp() {
+		messageToDisplay("Comprobando la configuracion");
+		
+		
 		boolean isBluetoothOk=isBloothActivated();
 		boolean isLocationActivado=isLocationActivado();
 		boolean isConfiguracionOk=false;
 		if (isLocationActivado && isBluetoothOk) {
-			locationMessage.setVisibility(View.GONE);
-			bluetoothMessage.setVisibility(View.GONE);
+			actualizarMensajeConfiguracion(View.GONE,View.GONE);
 			isConfiguracionOk=true;
 		} else if(!isLocationActivado && !isBluetoothOk) {
-			locationMessage.setVisibility(View.VISIBLE);
-			bluetoothMessage.setVisibility(View.VISIBLE);
+			actualizarMensajeConfiguracion(View.VISIBLE,View.VISIBLE);
 			isConfiguracionOk=false;
 			
 		}else if(!isLocationActivado){
-			locationMessage.setVisibility(View.VISIBLE);
-			bluetoothMessage.setVisibility(View.GONE);
+			actualizarMensajeConfiguracion(View.VISIBLE,View.GONE);
 			isConfiguracionOk=false;
 			
 		}else if(!isBluetoothOk){
-			locationMessage.setVisibility(View.GONE);
-			bluetoothMessage.setVisibility(View.VISIBLE);
+			actualizarMensajeConfiguracion(View.GONE,View.VISIBLE);
 			isConfiguracionOk=false;
 		}
 
 		if(!isConfiguracionOk){//Configuracion esta mal
-			txtState.setText("Error en configuracion, compruebalo ");
+			messageToDisplay("Error en configuracion, compruebalo ");
 		}else if(MainActivity.mCurrentLocation==null&&isConfiguracionOk){ //Configuracion esta ok, pero no hemos podido encontrar location
-			txtState.setText("No se ha podido obtener localizacion");
+			messageToDisplay("No se ha podido obtener localizacion");
 		}else if(promotions!=null && promotions.size()>0&&isConfiguracionOk){//Configuracion esta bien y hemos encontrado promociones
-			txtState.setText("Promicones encotnradas");
+			messageToDisplay("Promicones encotnradas");
+		
 			spinner.setVisibility(View.GONE);
 		}else if(!isPromotionsEncontrados() && isConfiguracionOk && !isRegionesEncontrados()){ //Todo esta bien excepto que no se ha encontrado ningun beacons
-			txtState.setText("No se encontrado puntos de ofertas cercanas");
+			
+			messageToDisplay("No se encontrado puntos de ofertas cercanas");
 		}
 		
 	}
@@ -199,4 +215,18 @@ public class PromocionesFragment extends Fragment {
 	public void setSpinner(ProgressBar spinner) {
 		this.spinner = spinner;
 	}
+	
+	private static void messageToDisplay(final String line) {
+		final Activity activity = (Activity) context;
+		((Activity) context).runOnUiThread(new Runnable() {
+    	    public void run() {
+//    	    	final TextView text= (TextView) rootView.findViewById(R.id.txtState);
+    	    	if(txtState!=null){
+    	    		txtState.setText(line);
+    	    	}
+    	    	
+     	    	    		
+    	    }
+    	});
+    }
 }

@@ -295,10 +295,10 @@ public class MainActivity extends Activity  {
 		    	});
 			}
 		
-//		actualizarEstadoMensajesError();
+
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		displayView(0);
-//		BeaconsApp.clearAllNotificaciones();
+		PromocionesFragment.actualizarEstadoApp();
 		((BeaconsApp) super.getApplication()).clearAllNotificaciones();
 		super.onResume();
 	}
@@ -325,7 +325,7 @@ public class MainActivity extends Activity  {
 		}
 		
 		if(PromocionesFragment.promotions.size()==0){
-			PromocionesFragment.actualizarEstadoMensajesError();
+			PromocionesFragment.actualizarEstadoApp();
 		}
 		
 		((Activity) this).runOnUiThread(new Runnable() {
@@ -414,7 +414,7 @@ public class MainActivity extends Activity  {
 
 			break;
 		}
-		PromocionesFragment.actualizarEstadoMensajesError();
+		PromocionesFragment.actualizarEstadoApp();
 	}
 
 	public void onEditTextClicked(View view) {

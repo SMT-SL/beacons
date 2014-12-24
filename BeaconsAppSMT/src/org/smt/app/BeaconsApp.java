@@ -91,13 +91,12 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 //			e.printStackTrace();
 //		}
 		mListregions=new ArrayList<Region>();
-//		mAllBeaconsRegion = new Region("all beacons", null, Identifier.fromInt(1), Identifier.fromInt(2));
 		mListregions.add(new Region("myIdentifier1", null, Identifier.fromInt(1), Identifier.fromInt(1)));
-		mListregions.add(new Region("myIdentifier2", null, Identifier.fromInt(1), Identifier.fromInt(2)));
-		mListregions.add(new Region("myIdentifier3", null, Identifier.fromInt(1), Identifier.fromInt(3)));
-		mListregions.add(new Region("myIdentifier4", null, Identifier.fromInt(1), Identifier.fromInt(4)));
-		mListregions.add(new Region("myIdentifier5", null, Identifier.fromInt(1), Identifier.fromInt(5)));
-		mListregions.add(new Region("myIdentifier6", null, Identifier.fromInt(1), Identifier.fromInt(6)));
+//		mListregions.add(new Region("myIdentifier2", null, Identifier.fromInt(1), Identifier.fromInt(2)));
+//		mListregions.add(new Region("myIdentifier3", null, Identifier.fromInt(1), Identifier.fromInt(3)));
+//		mListregions.add(new Region("myIdentifier4", null, Identifier.fromInt(1), Identifier.fromInt(4)));
+//		mListregions.add(new Region("myIdentifier5", null, Identifier.fromInt(1), Identifier.fromInt(5)));
+//		mListregions.add(new Region("myIdentifier6", null, Identifier.fromInt(1), Identifier.fromInt(6)));
 		mRegionBootstrap = new RegionBootstrap(this, mListregions);
 		
 		// super.onCreate();
@@ -244,7 +243,10 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 	}
 
 	public Location getLocation() {
-		mCurrentLocation = mLocationClient.getLastLocation();
+		if(mLocationClient.isConnected()){
+			mCurrentLocation = mLocationClient.getLastLocation();
+		}
+		
 		return this.mCurrentLocation;
 	}
 
