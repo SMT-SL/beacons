@@ -7,18 +7,8 @@
     android:animateLayoutChanges="true"
     android:background="#e5e5e5">
 
- 	 <ImageView
- 		android:id="@+id/imgLogoShop"
-  	 	android:layout_width="wrap_content"
-  	 	android:layout_height="87dp"
-  	 	android:layout_gravity="center"
-  	 	android:layout_marginBottom="4dp"
-  	 	android:layout_marginTop="4dp"
-  	 	android:scaleType="fitXY"
-  	 	android:src="@drawable/created_deusto_small" />
- 	 
 	<TextView
-        android:id="@+id/txtState"
+        android:id="@+id/txtStateBuscarPr"
         android:layout_width="fill_parent"
         android:gravity="center_horizontal"
         android:layout_height="wrap_content"

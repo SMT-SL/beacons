@@ -32,17 +32,67 @@ public class GestorRed {
 	public String getServerUrl(){
 		return serverUrl;
 	}
+//	private static final String serverUrl = "http://beaconsws.azurewebsites.net/"; // real
+	private static final String serverUrl = "http://beaconstesting.azurewebsites.net/"; // prueba para nuevo objeto
+//	private static final String serverUrl = "http://192.168.54.130/BeaconProject/"; // para el local de galder
+	private static final String loginUrl = serverUrl+"UserManagement.svc/json/login";
+	private static final String beaconsFoundUrl = serverUrl+"UserManagement.svc/json/beaconDetected";
+	private static final String registerUrl=	serverUrl+"UserManagement.svc/json/newUser";
+	private static final String recoverPasswordUrl=	serverUrl+"AutenticationManagement.svc/json/RequestNewPass";
+	private static final String deleteFromWalletUrl=	serverUrl+"UserManagement.svc/json/deleteOffer";
+	private static final String PromotionFromWalletUrl=	serverUrl+"UserManagement.svc/json/getUserOffers";
+	private static final String changeUserPasswordUrl=	serverUrl+"AutenticationManagement.svc/json/ChangePass";
+	private static final String addToWalletUrl=	serverUrl+"UserManagement.svc/json/saveOffer";
+	private static final String modifyUserPerfilUrl=serverUrl+"UserManagement.svc/json/EditUser";
 	
-//	private String serverUrl = "https://inztantapi.azurewebsites.net/";
-//	private String serverUrl = "https://inztantw.trafficmanager.net/";
-	private String serverUrl = "http://beaconsws.azurewebsites.net/";
-//	private String serverAsierUrl = "https://192.168.54.133/Inztant/ServiciosWeb.Nucleo/";
-//	private String serverGalderUrl = "https://192.168.54.130/Inztant/ServiciosWeb.Nucleo/";
+	public JSONObject getPromotionFromWallet(JSONObject jsonInput) {
+		try {
+			
+			JSONObject resultado = this.getJSONObjectFromURL(PromotionFromWalletUrl, jsonInput);
+			return resultado;
+		} catch (Exception e) {
+			return null;
+		}
+	}
 	
+	public JSONObject deleteFromWallet(JSONObject jsonInput) {
+		try {
+			
+			JSONObject resultado = this.getJSONObjectFromURL(deleteFromWalletUrl, jsonInput);
+			return resultado;
+		} catch (Exception e) {
+			return null;
+		}
+	}
 	
-	private String loginUrl = serverUrl+"UserManagement.svc/json/login";
-	private String beaconsFoundUrl = serverUrl+"UserManagement.svc/json/beaconDetected";
-		
+	public JSONObject addToWallet(JSONObject jsonInput) {
+		try {
+			
+			JSONObject resultado = this.getJSONObjectFromURL(addToWalletUrl, jsonInput);
+			return resultado;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public JSONObject changeUserPassword(JSONObject jsonInput) {
+		try {
+			
+			JSONObject resultado = this.getJSONObjectFromURL(changeUserPasswordUrl, jsonInput);
+			return resultado;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	public JSONObject modifyUserPerfil(JSONObject jsonInput) {
+		try {
+			
+			JSONObject resultado = this.getJSONObjectFromURL(modifyUserPerfilUrl, jsonInput);
+			return resultado;
+		} catch (Exception e) {
+			return null;
+		}
+	}
 	public JSONObject login(JSONObject jsonInput) {
 		try {
 			
@@ -52,16 +102,37 @@ public class GestorRed {
 			return null;
 		}
 	}
-	
-	public JSONArray getBeaconsPromotions(JSONObject jsonInput) {
+	/**
+	 * 
+	 * @param jsonInput
+	 * @return
+	 */
+	public JSONObject register(JSONObject jsonInput) {
 		try {
-			JSONArray resultado = this.getJSONArrayFromURL(beaconsFoundUrl, jsonInput);
+			
+			JSONObject resultado =  this.getJSONObjectFromURL(registerUrl, jsonInput);
+			return resultado;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	public JSONObject getBeaconsPromotions(JSONObject jsonInput) {
+		try {
+			JSONObject resultado = this.getJSONObjectFromURL(beaconsFoundUrl, jsonInput);
 			return resultado;
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
+  public JSONObject getRecoverPassword(JSONObject jsonInput){
+	  try {
+			JSONObject resultado =  this.getJSONObjectFromURL(recoverPasswordUrl, jsonInput);
+			return resultado;
+		} catch (Exception e) {
+			return null;
+		}
+  }
 //	public String signUp(JSONObject jsonInput) {
 //		try {
 //			String completeLoginUrl = this.signupUrl; //  "this.serverUrl" + "/" + "this.loginUrl";
@@ -87,6 +158,7 @@ public class GestorRed {
 			BasicResponseHandler responseHandler = new BasicResponseHandler();
 			String responseBody = httpClient.execute(request, responseHandler);
 			httpClient.getConnectionManager().shutdown();
+			if(!responseBody.isEmpty())
 			jsonObject = new JSONObject(responseBody);
 
 		} catch (MalformedURLException e) {
@@ -116,7 +188,10 @@ public class GestorRed {
 			e.printStackTrace();
 		}
 		try {
-			Log.i("JSON devuelto por WS", jsonObject.toString());
+			if(jsonObject!=null){
+				Log.i("JSON devuelto por WS", jsonObject.toString());
+
+			}
 			return jsonObject;
 		} catch (Exception e) {
 			Log.i("JSON NULL",
@@ -196,7 +271,10 @@ public class GestorRed {
 			e.printStackTrace();
 		}
 		try {
-			Log.i("JSON devuelto por WS", jsonArray.toString());
+			if(jsonArray!=null){
+				Log.i("JSON devuelto por WS", jsonArray.toString());
+
+			}
 			return jsonArray;
 		} catch (Exception e) {
 			Log.i("JSON NULL",

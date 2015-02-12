@@ -13,21 +13,25 @@ public class UserDTO {
 	private String deviceToken;
 	private String token;
 	private String email;
-	private String Sex;
+	private  int Sex;
 	private int CP;
 	private Date birthDate;
 	
+	public UserDTO(){
+		
+	}
+	
 	public UserDTO(JSONObject jsonInput) {
 		try {
-			userId = jsonInput.getLong("UserId");
-			nickName = jsonInput.getString("nickName");
-			password = jsonInput.getString("password");
-			deviceToken = jsonInput.getString("deviceToken");
-			token = jsonInput.getString("token");
-			email = jsonInput.getString("email");
-			Sex = jsonInput.getString("Sex");
-			CP = jsonInput.getInt("CP");
-			birthDate = new Date(Long.valueOf(jsonInput.getString("birthDate").substring(6, jsonInput.getString("birthDate").indexOf('+'))).longValue());
+			userId = jsonInput.isNull("UserId")?0:jsonInput.getLong("UserId");
+			nickName = jsonInput.isNull("nickName")?"":jsonInput.getString("nickName");
+			password = jsonInput.isNull("password")?"":jsonInput.getString("password");
+//			deviceToken = jsonInput.isNull("deviceToken")jsonInput.getString("deviceToken");
+			token = jsonInput.isNull("token")?"":jsonInput.getString("token");
+			email = jsonInput.isNull("email")?"":jsonInput.getString("email");
+			Sex = jsonInput.isNull("Sex")?1:jsonInput.getInt("Sex");
+			CP = jsonInput.isNull("CP")?0:jsonInput.getInt("CP");
+			birthDate = jsonInput.isNull("UserId")?new Date(Long.valueOf(jsonInput.getString("birthDate").substring(6, jsonInput.getString("birthDate").indexOf('+'))).longValue()):new Date(0);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -81,11 +85,11 @@ public class UserDTO {
 		this.email = email;
 	}
 
-	public String getSex() {
+	public int getSex() {
 		return Sex;
 	}
 
-	public void setSex(String sex) {
+	public void setSex(int sex) {
 		Sex = sex;
 	}
 

@@ -1,5 +1,8 @@
 package org.smt.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class WalletPromocion {
 
 	private int offerId;
@@ -19,6 +22,20 @@ public class WalletPromocion {
 		this.setThumbnail(wpromoicon.getThumbnail());
 	}
 
+	public WalletPromocion(JSONObject object) {
+		try {
+			offerId = object.isNull("offerId")?0:object.getInt("offerId");
+			name =object.isNull("name")?"": object.getString("name");
+			thumbnail = object.isNull("thumbnail")?"":object.getString("thumbnail");
+			offerType = object.isNull("offerType")?0:object.getInt("offerType");
+			offerURL = object.isNull("offerURL")?"":object.getString("offerURL");
+			description = object.isNull("offerDescription")?"":object.getString("offerDescription");
+			location="";
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public WalletPromocion() {
 
 	}

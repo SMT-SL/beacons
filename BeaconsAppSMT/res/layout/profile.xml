@@ -24,6 +24,7 @@
         	android:layout_width="match_parent"
        		android:layout_height="wrap_content"
         	android:layout_below="@+id/quickContact"
+        	android:textCursorDrawable="@null"
         	android:layout_alignParentRight="true"/>
         
         <TextView
@@ -39,6 +40,7 @@
         	android:layout_width="match_parent"
        		android:layout_height="wrap_content"
         	android:layout_below="@+id/textNombre"
+        	android:textCursorDrawable="@null"
         	android:layout_alignParentRight="true"/>
         <TextView
             android:id="@+id/textCp"
@@ -52,6 +54,7 @@
        		android:id="@+id/editCp"
         	android:layout_width="match_parent"
        		android:layout_height="wrap_content"
+       		android:textCursorDrawable="@null"
        		android:layout_below="@+id/textEmail"
         	android:layout_alignParentRight="true" />
 

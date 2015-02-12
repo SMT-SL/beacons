@@ -4,11 +4,14 @@ import java.util.ArrayList;
 
 import org.altbeacon.beacon.Beacon;
 import org.smt.R;
-import org.smt.activity.MainActivity;
+import org.smt.activity.BuscarPromocionesActivity;
+import org.smt.activity.LoginActivity;
 import org.smt.adapters.PromotionListAdapter;
 import org.smt.adapters.WalletListaAdapter;
 import org.smt.model.OfferDetailsDTO;
 import org.smt.model.WalletPromocion;
+import org.smt.tasks.LoginTask;
+import org.smt.tasks.ObtenerPromocionWalltetTask;
 
 import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
@@ -31,14 +34,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationClient;
-//import org.smt.activity.EasiActivity;
-//import org.smt.activity.ImageActivity;
 
 public class WalletFragment extends Fragment {
 	
 	private ListView walletListView;
 
-	private static ArrayList<WalletPromocion> walletPromocionList;
+	public static ArrayList<WalletPromocion> walletPromocionList;
 	public static WalletListaAdapter walletListAdapter;
 	private ProgressBar spinner;
 	private TextView txtState;
@@ -48,12 +49,15 @@ public class WalletFragment extends Fragment {
 	public WalletFragment(Context context) {
 		this.context = context;
 	}
+	public WalletFragment() {
+	
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.context =getActivity();
-		setWalletPromocionList(MainActivity.getWalletPromocionList());
+		setWalletPromocionList();
 		
 		rootView = inflater.inflate(R.layout.fragment_wallet, container, false);
 		walletListAdapter = new WalletListaAdapter(context);
@@ -116,9 +120,61 @@ public class WalletFragment extends Fragment {
 		return walletPromocionList;
 	}
 
-	public static void setWalletPromocionList(ArrayList<WalletPromocion> walletPromocionList) {
-		WalletFragment.walletPromocionList = walletPromocionList;
+	private  void setWalletPromocionList() {
+//		WalletFragment.walletPromocionList = walletPromocionList;
+		new ObtenerPromocionWalltetTask(this.context).execute();
+
 	}
 	
+	public  static int addToWalletList(OfferDetailsDTO promocionAguardar) {
+		int code=-1;
+		if(!isExistPromocion(promocionAguardar)){
+			WalletPromocion wPromocionObject = new WalletPromocion();
+			if (walletPromocionList == null) {
+				walletPromocionList = new ArrayList<WalletPromocion>();
+			}
+			wPromocionObject.setDescription(promocionAguardar.getDescription());
+			wPromocionObject.setLocation("");
+			wPromocionObject.setName(promocionAguardar.getName());
+			wPromocionObject.setOfferId(promocionAguardar.getOfferId());
+			wPromocionObject.setOfferURL(promocionAguardar.getOfferURL());
+			wPromocionObject.setThumbnail(promocionAguardar.getThumbnail());
+			walletPromocionList.add(wPromocionObject);
+			
+			code=200;
+		}else{
+			code= 202;
+		}
+		
+		return code;
+	}
 	
+	private static boolean isExistPromocion(OfferDetailsDTO promocionAguardar){
+		Boolean existePromocion=false;
+		if(walletPromocionList!=null&& walletPromocionList.size()>0){
+			for(int i=0;i<walletPromocionList.size();i++){
+				if(walletPromocionList.get(i).getOfferId()==promocionAguardar.getOfferId()){
+					i=walletPromocionList.size();
+					existePromocion=true;
+				}
+			}
+		}
+		
+		return existePromocion;
+	}
+
+	public static int removeFromWalletList(final int offerId ) {
+		int code = -1;
+		if(walletPromocionList!=null&& walletPromocionList.size()>0){
+			for(int i=0;i<walletPromocionList.size();i++){
+				if(walletPromocionList.get(i).getOfferId()==offerId){
+					walletPromocionList.remove(i);
+					WalletFragment.walletListAdapter.notifyDataSetChanged();
+					code=200;
+				}
+			}
+		}
+		return code;
+		
+	}
 }

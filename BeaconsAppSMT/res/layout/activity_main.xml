@@ -1,27 +1,112 @@
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
+
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+   xmlns:tools="http://schemas.android.com/tools"
+  android:fillViewport="true">
+  
+  <RelativeLayout
+   
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:animateLayoutChanges="true">
+    android:background="@android:color/white"
+    android:gravity="top"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.smt.beacons.activity.LoginActivity" >
 
-    <!-- Framelayout to display Fragments -->
-    <FrameLayout
-        android:id="@+id/frame_container"
+    <!--
+    <TextView
+        android:id="@+id/textView0"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:padding="15dp"
+        android:text="Frigo"
+       	
+        android:textSize="30sp"
+        android:textStyle="bold" />
+    -->
 
-    <!-- Listview to display slider menu -->
-    <ListView
-        android:id="@+id/list_slidermenu"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:divider="@color/list_divider"
-        android:dividerHeight="1dp"        
-        android:listSelector="@drawable/list_selector"
-        android:background="@color/list_background"/>
-</android.support.v4.widget.DrawerLayout>
+    <TextView
+        android:id="@+id/txtPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView0"
+        android:gravity="center_horizontal"
+        android:padding="5dp"
+        android:text="Promociones con beacons"
+        android:textSize="24sp" />
 
+    <!-- android:text="Compartiendo felicidad" -->
+
+    <TextView
+        android:id="@+id/text_user_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtPassword"
+        android:layout_marginLeft="15dp"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/text_pass_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_user_error"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btnStartSession"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_pass_error"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:background="#0AC92B"
+        android:padding="10dp"
+        android:text="Iniciar Sesion"
+        android:textColor="@android:color/white"
+        android:textSize="25sp" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnRegister"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/created_deusto_small" />
+
+    <!-- android:src="@drawable/frigo_logo_blanco" -->
+
+    <ImageView
+        android:id="@+id/textView0"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/ic_launcher" />
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnStartSession"
+        android:layout_marginTop="25dp"
+        android:background="#3f48cc"
+        android:onClick="toRegister"
+        android:text="Registrate"
+        android:textColor="@android:color/white"
+        android:textSize="25sp" />
+
+</RelativeLayout>
+</ScrollView>

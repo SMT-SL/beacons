@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.smt.R;
 import org.smt.activity.ImageActivity;
-import org.smt.activity.MainActivity;
+import org.smt.activity.BuscarPromocionesActivity;
 import org.smt.adapters.PromotionListAdapter;
 import org.smt.model.OfferDetailsDTO;
 
@@ -89,7 +89,7 @@ public class PromocionesFragment extends Fragment {
 		listPromociones = (ListView) rootView.findViewById(R.id.listViewPromociones);
 		setSpinner((ProgressBar) rootView.findViewById(R.id.pbHeaderProgress));
 		listPromociones.setAdapter(promotionsAdapter);
-		setTxtState((TextView) rootView.findViewById(R.id.txtState));
+		setTxtState((TextView) rootView.findViewById(R.id.txtStateBuscarPr));
 
 		
 
@@ -163,7 +163,7 @@ public class PromocionesFragment extends Fragment {
 
 		if(!isConfiguracionOk){//Configuracion esta mal
 			messageToDisplay("Error en configuracion, compruebalo ");
-		}else if(MainActivity.mCurrentLocation==null&&isConfiguracionOk){ //Configuracion esta ok, pero no hemos podido encontrar location
+		}else if(BuscarPromocionesActivity.mCurrentLocation==null&&isConfiguracionOk){ //Configuracion esta ok, pero no hemos podido encontrar location
 			messageToDisplay("No se ha podido obtener localizacion");
 		}else if(promotions!=null && promotions.size()>0&&isConfiguracionOk){//Configuracion esta bien y hemos encontrado promociones
 			messageToDisplay("Promicones encotnradas");
@@ -180,7 +180,7 @@ public class PromocionesFragment extends Fragment {
 		return promotions!=null &&  promotions.size()>0;
 	}
 	private static boolean isRegionesEncontrados(){
-		return ((MainActivity) context).regionsEncontrado!=null && ((MainActivity) context).regionsEncontrado.size()>0;
+		return ((BuscarPromocionesActivity) context).regionsEncontrado!=null && ((BuscarPromocionesActivity) context).regionsEncontrado.size()>0;
 	}
 	private static boolean  isLocationActivado() {
 		@SuppressWarnings("deprecation")

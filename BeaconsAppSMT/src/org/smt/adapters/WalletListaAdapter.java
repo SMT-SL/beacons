@@ -1,12 +1,15 @@
 package org.smt.adapters;
 
 import org.smt.R;
-import org.smt.activity.MainActivity;
+import org.smt.activity.BuscarPromocionesActivity;
 import org.smt.app.BeaconsApp;
 import org.smt.fragments.WalletFragment;
 import org.smt.holders.PromotionListHolder;
 import org.smt.model.WalletPromocion;
+import org.smt.tasks.BorrarDeWalletTask;
+import org.smt.tasks.GuardarEnWalletTask;
 import org.smt.utils.MyImageLoadingListener;
+import org.smt.utils.Utils;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -36,7 +39,7 @@ public class WalletListaAdapter  extends BaseAdapter{
 
 			if (convertView == null) {
 				holder = new PromotionListHolder();
-				convertView = li.inflate(R.layout.listitem_wallet, parent, false);
+				convertView = li.inflate(R.layout.item_list_wallet, parent, false);
 
 				holder.textPromo = ((TextView) convertView.findViewById(R.id.offer_name));
 				holder.imagePromo = (ImageView) convertView.findViewById(R.id.image_promo);
@@ -54,14 +57,21 @@ public class WalletListaAdapter  extends BaseAdapter{
 
 				@Override
 				public void onClick(View v) {
-					Toast toast = Toast.makeText(context, "Se ha borrado promocion", Toast.LENGTH_SHORT);
-					toast.show();
-					MainActivity.removeFromWalletList(promo);
+					int code=WalletFragment.removeFromWalletList(promo.getOfferId());;
+					
+					if(code==200){//Agregamos en backend despues de comprobar que ya podemos agregar promocion en wallet
+						Toast toast = Toast.makeText(context, "Se ha borrado la promocion seleccionado", Toast.LENGTH_SHORT);
+						toast.show();
+						new BorrarDeWalletTask(context,promo.getOfferId()).execute();
+					}else{
+						Toast toast = Toast.makeText(context, Utils.getMensaje(code), Toast.LENGTH_SHORT);
+						toast.show();
+					}
 
 				}
 			});
 			holder.textPromo.setText(promo.getName());
-			if (!promo.getDescription().equals("null")) {
+			if (promo.getDescription()!=null) {
 				holder.textDesc.setText(promo.getDescription());
 			}
 

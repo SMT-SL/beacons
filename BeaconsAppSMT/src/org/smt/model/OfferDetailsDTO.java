@@ -17,14 +17,14 @@ public class OfferDetailsDTO {
 
 	public OfferDetailsDTO(JSONObject object) {
 		try {
-			offerId = object.getInt("offerId");
-			name = object.getString("name");
-			thumbnail = object.getString("thumbnail");
-			offerType = object.getInt("offerType");
-			offerURL = object.getString("offerURL");
-			description = object.getString("offerDescription");
-			major=object.getInt("major");
-			minor=object.getInt("minor");
+			offerId = object.isNull("offerId")?0:object.getInt("offerId");
+			name = object.isNull("name")?"":object.getString("name");
+			thumbnail = object.isNull("thumbnail")?"":object.getString("thumbnail");
+			offerType = object.isNull("offerType")?0:object.getInt("offerType");
+			offerURL = object.isNull("offerURL")?"":object.getString("offerURL");
+			description = object.isNull("offerDescription")?"":object.getString("offerDescription");
+			major=object.isNull("major")?0:object.getInt("major");
+			minor=object.isNull("minor")?0:object.getInt("minor");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

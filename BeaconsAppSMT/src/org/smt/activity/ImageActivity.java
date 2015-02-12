@@ -22,7 +22,6 @@ public class ImageActivity extends Activity {
 		Intent i = getIntent();
 		String image = i.getStringExtra("image");
 	    final ImageView imageView = (ImageView) findViewById(R.id.imageButton1);
-//	    imageView.setImageURI(Uri.parse("android.resource://com.smt.beaconsmagnum/drawable/magnumfrac21"));//;Drawable(getResources().getDrawable(resId));
 	    
 	    ((BeaconsApp) this.getApplicationContext()).getImageLoader().displayImage(image, imageView);
 	}

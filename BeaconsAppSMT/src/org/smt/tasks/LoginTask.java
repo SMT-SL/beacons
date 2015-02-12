@@ -2,10 +2,12 @@ package org.smt.tasks;
 
 import java.lang.ref.WeakReference;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smt.activity.LoginActivity;
 import org.smt.model.UserDTO;
 import org.smt.utils.GestorRed;
+import org.smt.utils.Utils;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -37,7 +39,6 @@ public class LoginTask extends AsyncTask<Void, Integer, JSONObject> {
 		pDialog.setMessage("Esperando al login...");
 		pDialog.setCancelable(false);
 		pDialog.setMax(100);
-
 		pDialog.setProgress(0);
 		pDialog.show();
 	}
@@ -60,35 +61,66 @@ public class LoginTask extends AsyncTask<Void, Integer, JSONObject> {
 
 	@Override
 	public void onPostExecute(JSONObject jsonResult) {
+		JSONObject mensajeError=null;
+		JSONObject jsonUser=null;
+		int code=-1;
+		LoginActivity activity = (LoginActivity) this.weakActivity.get();
 		if (jsonResult != null) {
+			try {
+					if(jsonResult.getJSONObject("error")!=null){
+						mensajeError=jsonResult.getJSONObject("error");
+						code=mensajeError.getInt("code");
+					}
+					
+					if(jsonResult.getJSONObject("response")!=null){
+					 jsonUser=jsonResult.getJSONObject("response");
+					}				 
+				 
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		 if(mensajeError!=null && jsonUser!=null&& code==200){//respuesta correcta
 
-			Log.e("JSON recibido", jsonResult.toString());
-			LoginActivity activity = (LoginActivity) this.weakActivity.get();
+				if (activity != null) {
+					UserDTO user = new UserDTO(jsonUser);
+					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+					SharedPreferences.Editor edit = prefs.edit();
+					edit.putLong("UserId", user.getUserId());
+					edit.putString("nickName", user.getNickName());
+					edit.putString("password", user.getPassword());
+					edit.putString("fechaNacimiento", (Integer.toString(user.getBirthDate().getDay()))+"/"+Integer.toString(user.getBirthDate().getMonth())+"/"+Integer.toString(user.getBirthDate().getYear()));
+					edit.putString("email", user.getEmail());
+					edit.putInt("Sex", user.getSex());
+					edit.putString("CP", String.valueOf(user.getCP()));
+					edit.putString("userToken", user.getToken());
+					edit.commit();
+					activity.toMain();
+				}
 
-			if (activity != null) {
-				UserDTO user = new UserDTO(jsonResult);
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-				SharedPreferences.Editor edit = prefs.edit();
-				edit.putLong("UserId", user.getUserId());
-				edit.putString("nickName", user.getNickName());
-				edit.putString("password", user.getPassword());
-				edit.putString("email", user.getEmail());
-				edit.putString("Sex", user.getSex());
-				edit.putString("CP", String.valueOf(user.getCP()));
-				edit.commit();
-
-				activity.toMain();
+			
+			} else if(code > 0){//respuesta recibida pero error en datos para logear
+				
+				showMessage(activity,Utils.getMensaje(code));
+				Log.e("JSON recibido", jsonResult.toString());
+				
+			}else{//errores genericos al recibir respeusta como mensajeError es null o jsonUser is null
+				showMessage(activity,"Error generico, vuelva a intentar mas tarde");
 			}
 
-		} else {
-			LoginActivity activity = (LoginActivity) this.weakActivity.get();
-			if (activity != null) {
-				activity.txtErrorPass.setText("Uuups! por favor, prueba de nuevo");
-				activity.txtErrorPass.setVisibility(View.VISIBLE);
-			}
+		}else{//Se ha recibido jsonResult null, no se ha podido enviar la peticion o servidor se ha vuelto respusta null
+			showMessage(activity,"Opss, No se ha podido conectar con servidor");
 		}
 
 		pDialog.dismiss();
 	}
 
+	private void showMessage(LoginActivity activity,final String message){
+		
+		if (activity != null) {
+			activity.txtErrorPass.setText(message);
+			activity.txtErrorPass.setVisibility(View.VISIBLE);
+		}
+	}
 }

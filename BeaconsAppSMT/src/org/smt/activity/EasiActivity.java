@@ -134,13 +134,13 @@ public class EasiActivity extends Activity implements BeaconConsumer, BootstrapN
 
 	@Override
 	protected void onStop() {
-		((BeaconsApp) this.getApplication()).setEasyActivity(null);
+		((BeaconsApp) this.getApplication()).setMainActivity(null);
 		super.onStop();
 	}
 
 	@Override
 	protected void onPause() {
-		((BeaconsApp) this.getApplication()).setEasyActivity(null);
+		((BeaconsApp) this.getApplication()).setMainActivity(null);
 		super.onPause();
 	}
 
@@ -201,7 +201,7 @@ public class EasiActivity extends Activity implements BeaconConsumer, BootstrapN
 			editor.putString("email", "");
 			editor.commit();
 
-			Intent intent = new Intent(EasiActivity.this, LoginActivity.class);
+			Intent intent = new Intent(EasiActivity.this, MainActivity.class);
 			startActivity(intent);
 
 			timer.cancel();

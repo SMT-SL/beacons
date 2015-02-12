@@ -6,4 +6,7 @@
     <color name="list_divider">#272727</color>
     <color name="counter_text_bg">#626262</color>
     <color name="counter_text_color">#c5c4c4</color>
+    <color name="editbox_disabled">#777877</color>
+    <color name="eidtbox_background_smt">#C3F1FA</color>
+    <color name="black">#000000</color>
 </resources>

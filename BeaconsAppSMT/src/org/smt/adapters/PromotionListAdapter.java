@@ -1,12 +1,15 @@
 package org.smt.adapters;
 
 import org.smt.R;
-import org.smt.activity.MainActivity;
 import org.smt.app.BeaconsApp;
 import org.smt.fragments.PromocionesFragment;
 import org.smt.holders.PromotionListHolder;
 import org.smt.model.OfferDetailsDTO;
+import org.smt.tasks.GuardarEnWalletTask;
 import org.smt.utils.MyImageLoadingListener;
+import org.smt.utils.Utils;
+
+import org.smt.fragments.WalletFragment;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -36,7 +39,7 @@ public class PromotionListAdapter extends BaseAdapter {
 
 		if (convertView == null) {
 			holder = new PromotionListHolder();
-			convertView = li.inflate(R.layout.listitem_promociones, parent, false);
+			convertView = li.inflate(R.layout.item_list_promociones, parent, false);
 
 			holder.textPromo = ((TextView) convertView.findViewById(R.id.offer_name));
 			holder.imagePromo = (ImageView) convertView.findViewById(R.id.image_promo);
@@ -54,10 +57,15 @@ public class PromotionListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				Toast toast = Toast.makeText(context, "Promocion guardado en tu Wallet", Toast.LENGTH_SHORT);
-				toast.show();
-				MainActivity.addToWalletList(promo);
-
+				int code=WalletFragment.addToWalletList(promo);
+				if(code==200){//Agregamos en backend despues de comprobar que ya podemos agregar promocion en wallet
+					Toast toast = Toast.makeText(context, "Promocion guardado en tu Wallet", Toast.LENGTH_SHORT);
+					toast.show();
+					new GuardarEnWalletTask(context,promo.getOfferId()).execute();
+				}else{
+					Toast toast = Toast.makeText(context, Utils.getMensaje(code), Toast.LENGTH_SHORT);
+					toast.show();
+				}
 			}
 		});
 		holder.textPromo.setText(promo.getName());
