@@ -1,7 +1,6 @@
 package org.smt.activity;
 
 import org.smt.R;
-import org.smt.app.BeaconsApp;
 import org.smt.tasks.LoginTask;
 
 import android.app.Activity;
@@ -80,13 +79,11 @@ public class LoginActivity extends Activity{
 
 		@Override
 		protected void onStop() {
-			((BeaconsApp) this.getApplication()).setLoginActivity(null);
 			super.onStop();
 		}
 
 		@Override
 		protected void onPause() {
-			((BeaconsApp) this.getApplication()).setLoginActivity(null);
 			super.onPause();
 		}
 
@@ -121,7 +118,6 @@ public class LoginActivity extends Activity{
 		public void toRecuperarPassword() {
 			Intent i = new Intent(LoginActivity.this, RecoverPassword.class);
 			startActivity(i);
-//			finish();
 
 		}
 	}

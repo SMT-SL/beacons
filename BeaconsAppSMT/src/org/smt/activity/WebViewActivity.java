@@ -8,7 +8,6 @@ package org.smt.activity;
 import org.smt.R;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;

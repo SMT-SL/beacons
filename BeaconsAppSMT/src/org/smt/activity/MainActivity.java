@@ -1,8 +1,6 @@
 package org.smt.activity;
 
 import org.smt.R;
-import org.smt.app.BeaconsApp;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,9 +17,6 @@ public class MainActivity extends Activity {
 
 
 	private Button btnStartSession;
-
-
-	// private BeaconManager mBeaconManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,21 +45,17 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onStop() {
-		((BeaconsApp) this.getApplication()).setLoginActivity(null);
 		super.onStop();
 	}
 
 	@Override
 	protected void onPause() {
-		((BeaconsApp) this.getApplication()).setLoginActivity(null);
 		super.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 
-		((BeaconsApp) this.getApplication()).setLoginActivity(this);
-		// getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		super.onResume();
 	}
 
@@ -90,7 +81,6 @@ public class MainActivity extends Activity {
 
 		Intent i = new Intent(MainActivity.this, LoginActivity.class);
 		startActivity(i);
-//		finish();
 
 	}
 	public void toMain() {
@@ -104,7 +94,6 @@ public class MainActivity extends Activity {
 
 		Intent i = new Intent(MainActivity.this, RegisterUserActivity.class);
 		startActivity(i);
-//		finish();
 
 	}
 	

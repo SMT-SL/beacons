@@ -1,13 +1,11 @@
 package org.smt.adapters;
 
 import org.smt.R;
-import org.smt.activity.BuscarPromocionesActivity;
 import org.smt.app.BeaconsApp;
 import org.smt.fragments.WalletFragment;
 import org.smt.holders.PromotionListHolder;
-import org.smt.model.WalletPromocion;
+import org.smt.model.OfferDetailsDTO;
 import org.smt.tasks.BorrarDeWalletTask;
-import org.smt.tasks.GuardarEnWalletTask;
 import org.smt.utils.MyImageLoadingListener;
 import org.smt.utils.Utils;
 
@@ -52,7 +50,7 @@ public class WalletListaAdapter  extends BaseAdapter{
 				holder = (PromotionListHolder) convertView.getTag();
 			}
 
-			final WalletPromocion promo = WalletFragment.getWalletPromocionList().get(position);
+			final OfferDetailsDTO promo = WalletFragment.getWalletPromocionList().get(position);
 			holder.addBtn.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -95,7 +93,6 @@ public class WalletListaAdapter  extends BaseAdapter{
 
 		@Override
 		public Object getItem(int arg0) {
-			// return EasiActivity.promotions.get(arg0);
 			return WalletFragment.getWalletPromocionList().get(arg0);
 		}
 

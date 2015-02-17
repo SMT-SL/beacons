@@ -1,6 +1,5 @@
 package org.smt.model;
 
-import org.altbeacon.beacon.Region;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,7 +13,7 @@ public class OfferDetailsDTO {
 	private String offerURL;
 	private int major;
 	private int minor;
-
+	private String locationTiendaPromociones;
 	public OfferDetailsDTO(JSONObject object) {
 		try {
 			offerId = object.isNull("offerId")?0:object.getInt("offerId");
@@ -25,6 +24,7 @@ public class OfferDetailsDTO {
 			description = object.isNull("offerDescription")?"":object.getString("offerDescription");
 			major=object.isNull("major")?0:object.getInt("major");
 			minor=object.isNull("minor")?0:object.getInt("minor");
+			locationTiendaPromociones = object.isNull("location")?"":object.getString("location");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -32,6 +32,9 @@ public class OfferDetailsDTO {
 
 	}
 
+	public OfferDetailsDTO(){
+		
+	}
 	public int getOfferId() {
 		return offerId;
 	}
@@ -104,6 +107,14 @@ public class OfferDetailsDTO {
 
 	public void setMinor(int minor) {
 		this.minor = minor;
+	}
+
+	public String getLocationTiendaPromociones() {
+		return locationTiendaPromociones;
+	}
+
+	public void setLocationTiendaPromociones(String locationTiendaPromociones) {
+		this.locationTiendaPromociones = locationTiendaPromociones;
 	}
 
 

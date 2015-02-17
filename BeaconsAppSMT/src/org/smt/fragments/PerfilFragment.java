@@ -7,7 +7,6 @@ import org.smt.R;
 import org.smt.activity.ChangePasswordActivity;
 import org.smt.model.UserDTO;
 import org.smt.tasks.ModificarPerfilTask;
-import org.smt.tasks.RegisterUserTask;
 import org.smt.utils.Utils;
 
 import android.app.Fragment;
@@ -131,7 +130,7 @@ public class PerfilFragment extends Fragment {
 			btnGuardarEditPerfil.setVisibility(8);
 		}
 		btnCancelarEditPerfil.setEnabled(isActivar);
-		
+		editTextfechaNacimiento.setEnabled(isActivar);
 		
 	}
 
@@ -180,7 +179,7 @@ public class PerfilFragment extends Fragment {
 		}else if(!Utils.isformatoFechaCorrecto(fechaNacimiento)){
 			if(showPerfilError!=null){
 				showPerfilError.setVisibility(View.VISIBLE);
-				showPerfilError.setText("Formato de la fecha no esta correcto");
+				showPerfilError.setText("Formato de la fecha no esta correcto, (dd/mm/aaaa)");
 			}
 			return false;
 		}else{

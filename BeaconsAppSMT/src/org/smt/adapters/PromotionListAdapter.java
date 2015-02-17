@@ -2,7 +2,6 @@ package org.smt.adapters;
 
 import org.smt.R;
 import org.smt.app.BeaconsApp;
-import org.smt.fragments.PromocionesFragment;
 import org.smt.holders.PromotionListHolder;
 import org.smt.model.OfferDetailsDTO;
 import org.smt.tasks.GuardarEnWalletTask;
@@ -51,8 +50,7 @@ public class PromotionListAdapter extends BaseAdapter {
 		} else {
 			holder = (PromotionListHolder) convertView.getTag();
 		}
-		// OfferDetailsDTO promo = EasiActivity.promotions.get(position);
-		final OfferDetailsDTO promo = PromocionesFragment.promotions.get(position);
+		final OfferDetailsDTO promo = BeaconsApp.listOffer.get(position);
 		holder.addBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -61,7 +59,7 @@ public class PromotionListAdapter extends BaseAdapter {
 				if(code==200){//Agregamos en backend despues de comprobar que ya podemos agregar promocion en wallet
 					Toast toast = Toast.makeText(context, "Promocion guardado en tu Wallet", Toast.LENGTH_SHORT);
 					toast.show();
-					new GuardarEnWalletTask(context,promo.getOfferId()).execute();
+					new GuardarEnWalletTask(context,promo.getOfferId(),promo.getMajor(),promo.getMinor()).execute();
 				}else{
 					Toast toast = Toast.makeText(context, Utils.getMensaje(code), Toast.LENGTH_SHORT);
 					toast.show();
@@ -85,20 +83,16 @@ public class PromotionListAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
-		// return EasiActivity.promotions.size();
-		return PromocionesFragment.promotions.size();
+		return BeaconsApp.listOffer.size();
 	}
 
 	@Override
 	public Object getItem(int arg0) {
-		// return EasiActivity.promotions.get(arg0);
-		return PromocionesFragment.promotions.get(arg0);
+		return BeaconsApp.listOffer.get(arg0);
 	}
 
 	@Override
 	public long getItemId(int arg0) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

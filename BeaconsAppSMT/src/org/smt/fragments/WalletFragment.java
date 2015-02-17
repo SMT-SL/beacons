@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.altbeacon.beacon.Beacon;
 import org.smt.R;
 import org.smt.activity.BuscarPromocionesActivity;
+import org.smt.activity.ImageActivity;
 import org.smt.activity.LoginActivity;
 import org.smt.adapters.PromotionListAdapter;
 import org.smt.adapters.WalletListaAdapter;
@@ -39,7 +40,7 @@ public class WalletFragment extends Fragment {
 	
 	private ListView walletListView;
 
-	public static ArrayList<WalletPromocion> walletPromocionList;
+	public static ArrayList<OfferDetailsDTO> walletPromocionList;
 	public static WalletListaAdapter walletListAdapter;
 	private ProgressBar spinner;
 	private TextView txtState;
@@ -72,16 +73,15 @@ public class WalletFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				
-				Toast.makeText(context, "Stop Clicking me", Toast.LENGTH_SHORT).show();
-				if (((WalletPromocion) arg0.getAdapter().getItem(arg2)).getOfferType() != 2) {
+//				Toast.makeText(context, "Stop Clicking me", Toast.LENGTH_SHORT).show();
+				if (((OfferDetailsDTO) arg0.getAdapter().getItem(arg2)).getOfferType() != 2) {
 					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((OfferDetailsDTO) arg0.getAdapter().getItem(arg2)).getOfferURL())));
 				} else {
-					// Intent i = new Intent(EasiActivity.this,
-					// ImageActivity.class);
-					// String web =
-					// ((OfferDetailsDTO)arg0.getAdapter().getItem(arg2)).getOfferURL();
-					// i.putExtra("image", web);
-					// startActivity(i);
+					 Intent i = new Intent(getActivity(), ImageActivity.class);
+					 String web =
+					 ((OfferDetailsDTO)arg0.getAdapter().getItem(arg2)).getOfferURL();
+					 i.putExtra("image", web);
+					 startActivity(i);
 				}
 
 			}
@@ -116,7 +116,7 @@ public class WalletFragment extends Fragment {
 		this.spinner = spinner;
 	}
 
-	public static ArrayList<WalletPromocion> getWalletPromocionList() {
+	public static ArrayList<OfferDetailsDTO> getWalletPromocionList() {
 		return walletPromocionList;
 	}
 
@@ -129,12 +129,12 @@ public class WalletFragment extends Fragment {
 	public  static int addToWalletList(OfferDetailsDTO promocionAguardar) {
 		int code=-1;
 		if(!isExistPromocion(promocionAguardar)){
-			WalletPromocion wPromocionObject = new WalletPromocion();
+			OfferDetailsDTO wPromocionObject = new OfferDetailsDTO();
 			if (walletPromocionList == null) {
-				walletPromocionList = new ArrayList<WalletPromocion>();
+				walletPromocionList = new ArrayList<OfferDetailsDTO>();
 			}
 			wPromocionObject.setDescription(promocionAguardar.getDescription());
-			wPromocionObject.setLocation("");
+			wPromocionObject.setLocationTiendaPromociones("");
 			wPromocionObject.setName(promocionAguardar.getName());
 			wPromocionObject.setOfferId(promocionAguardar.getOfferId());
 			wPromocionObject.setOfferURL(promocionAguardar.getOfferURL());

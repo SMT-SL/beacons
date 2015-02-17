@@ -1,27 +1,13 @@
 package org.smt.tasks;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import org.smt.R;
-import org.smt.activity.EasiActivity;
-import org.smt.activity.ImageActivity;
 import org.smt.activity.BuscarPromocionesActivity;
 import org.smt.model.RegionInfoDTO;
 import org.smt.model.OfferDetailsDTO;
@@ -52,10 +38,7 @@ public class CheckPromocionesTask extends AsyncTask<Void, Integer, JSONObject>{
 	
 	@Override
 	public void onPreExecute(){
-		if (context instanceof EasiActivity){
-			displayHidePrgress(true);
 			messageToDisplay("Buscando promociones ......");
-		}
 	
 	}
 	
@@ -100,9 +83,9 @@ public class CheckPromocionesTask extends AsyncTask<Void, Integer, JSONObject>{
 		JSONArray promEncontradas=null;
 		
 		if (jsonResult != null){
-			if(PromocionesFragment.promotions!=null){
-				PromocionesFragment.promotions.clear();
-			}
+//			if(BeaconsApp.listOffer!=null){
+//				BeaconsApp.listOffer.clear();
+//			}
 			
 			try {
 				if(!jsonResult.isNull("error")){
@@ -115,16 +98,9 @@ public class CheckPromocionesTask extends AsyncTask<Void, Integer, JSONObject>{
 				if (code==200 && !jsonResult.isNull("response")){
 					
 					 promEncontradas = jsonResult.getJSONArray("response");
-					 if (context instanceof BuscarPromocionesActivity){
-						//Mostrar en la applicacion las ofertas encontradas
-						mostrarPromocionEnApp(promEncontradas);
-						messageToDisplay("Promociones encontradas");
+					 messageToDisplay("Promociones encontradas");
+					 BeaconsApp.agregarNuevoPromociones(getPromocionEncontradas(promEncontradas));
 									
-					} else {
-						//Mostrar notificacion
-						displayNotifiacion(promEncontradas);
-								
-					}
 								
 				} else if(jsonResult.isNull("response")){
 					messageToDisplay("Error Generico, intente un poco mas tarde!");
@@ -151,131 +127,37 @@ public class CheckPromocionesTask extends AsyncTask<Void, Integer, JSONObject>{
 	 */
 	private void messageToDisplay(final String line) {
 		
-
-		if (context instanceof BuscarPromocionesActivity){
-			final Activity activity = (Activity) context;
-			((Activity) activity).runOnUiThread(new Runnable() {
-				public void run() {
-					final TextView text=(TextView) activity.findViewById(R.id.txtStateBuscarPr);
-					if(text!=null){
-						text.setText(line);
-					}
-     	    	    		
-    	    }
-    	});
-	
-		}
+		PromocionesFragment.actualizarEstadoApp(line);
     }
 	
-	/**
-	 * 
-	 * @param display
-	 */
-	private void displayHidePrgress(final boolean display) {
-		final Activity activity = (Activity) context;
-		(activity).runOnUiThread(new Runnable() {
-    	    public void run() {
-    	    	
-    	    	 ProgressBar spinner=(ProgressBar) activity.findViewById(R.id.pbHeaderProgress);
-    	    	if(spinner!=null){
-    	    		if(display){
-        	    		spinner.setVisibility(View.VISIBLE);
-        	    	}else{
-        	    		spinner.setVisibility(View.GONE);
-        	    	}	
-    	    	}
-    	               	    	    		
-    	    }
-    	});
-	  }
+
 	
 	
-	private void displayNotifiacion(final JSONArray promEncontradas){
+	private ArrayList<OfferDetailsDTO> getPromocionEncontradas(final JSONArray promEncontradas){
+		ArrayList<OfferDetailsDTO> promociones=new ArrayList<OfferDetailsDTO>();
 		if(promEncontradas!=null){
 			for (int i= 0; i<promEncontradas.length(); i++){
 				
 				OfferDetailsDTO offer = null;
+				
 				try {
-					if (!promEncontradas.isNull(i)){
+						if (!promEncontradas.isNull(i)){
+						
 						JSONObject o = (JSONObject) promEncontradas.get(i);
 						offer = new OfferDetailsDTO(o);
-
-						Intent targetIntent = null;
-						Notification noti = null;
-						NotificationManager nManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-						String notifTitle = null, notifText = null;
-						int notifSmallIcon = 0, notifId = 0;
-						Bitmap notifBigIcon = null;
-			
-						if (offer.getOfferType()!=2){
-							targetIntent = new Intent(Intent.ACTION_VIEW, Uri.parse( offer.getOfferURL()));
-							notifBigIcon = BitmapFactory.decodeResource(context.getResources(),R.drawable.logo_deusto);
-						} else {
-							targetIntent = new Intent(context, ImageActivity.class);
-							String web = offer.getOfferURL();
-							targetIntent.putExtra("image", web);
-							notifBigIcon = ((BeaconsApp) context.getApplicationContext()).getImageLoader().loadImageSync(offer.getOfferURL());
+							promociones.add(offer);
+					
 						}
-			
-						notifTitle = offer.getName();
-						BeaconsApp.listOffer.add(offer);
-
-						notifSmallIcon = R.drawable.ic_launcher;
-						notifId = offer.getOfferId();
-						PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_ONE_SHOT);
-						NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-							.setSmallIcon(notifSmallIcon)
-							.setContentTitle(notifTitle)
-							.setContentText(notifText)
-							.setOnlyAlertOnce(true)
-							.setAutoCancel(true)
-							.setDefaults(Notification.DEFAULT_ALL)
-							.setContentIntent(contentIntent)
-							.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(notifBigIcon));
-	 	  	
-						noti = mBuilder.build();
-						nManager.notify(notifId, noti);
-					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
 		}
 		
-	}
-	private void mostrarPromocionEnApp(final JSONArray promEncontradas){
-		
-		messageToDisplay("Buscando promociones ......");
-		for (int i= 0; i<promEncontradas.length(); i++){
-			
-			OfferDetailsDTO offer = null;
-			try {
-				if (!promEncontradas.isNull(i)){
-					
-					JSONObject o = (JSONObject) promEncontradas.get(i);
-					offer = new OfferDetailsDTO(o);
-					boolean exists = false;
-					
-					for (OfferDetailsDTO ofDetails : PromocionesFragment.promotions){
-						if (ofDetails.equals(offer)){
-							exists = true;
-							break;
-						}
-					}
-					if  (!exists){
-						PromocionesFragment.promotions.add(offer);
-						PromocionesFragment.promotionsAdapter.notifyDataSetChanged();
-				
-					}
-				}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
 		}
 		
+		return promociones;
 	}
 	
 

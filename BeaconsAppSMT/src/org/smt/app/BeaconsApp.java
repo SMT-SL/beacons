@@ -14,21 +14,31 @@ import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 import org.altbeacon.beacon.startup.BootstrapNotifier;
 import org.altbeacon.beacon.startup.RegionBootstrap;
-import org.smt.activity.MainActivity;
+import org.smt.R;
+import org.smt.activity.ImageActivity;
 import org.smt.activity.BuscarPromocionesActivity;
+import org.smt.fragments.PromocionesFragment;
 import org.smt.model.OfferDetailsDTO;
 import org.smt.model.RegionInfoDTO;
 import org.smt.model.IBeaconsFound;
 import org.smt.tasks.CheckPromocionesTask;
 import org.smt.utils.Utils;
 
+import android.app.Activity;
 import android.app.Application;
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -41,8 +51,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 public class BeaconsApp extends Application implements BootstrapNotifier, RangeNotifier, GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
 
 	private static List<IBeaconsFound> notifiedBeacons;
-	private MainActivity loginActivity;
-	private BuscarPromocionesActivity mainActivity;
+//	private MainActivity loginActivity;
+	private static BuscarPromocionesActivity buscarPromocionesActivity;
 	// private EasiActivity easiActivity;
 	private ImageLoader imageLoader;
 	private DisplayImageOptions options;
@@ -50,54 +60,45 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 	private BeaconManager mBeaconManager;
 //	private Region mAllBeaconsRegion;
 	public static List<RegionInfoDTO> regionsFound = new ArrayList<RegionInfoDTO>();
-	public static List<OfferDetailsDTO> listOffer=new ArrayList<OfferDetailsDTO>();
+	public static ArrayList<OfferDetailsDTO> listOffer=new ArrayList<OfferDetailsDTO>();
 	private BackgroundPowerSaver mBackgroundPowerSaver;
 	@SuppressWarnings("unused")
 	private RegionBootstrap mRegionBootstrap;
-	private Location mCurrentLocation;
-	private LocationClient mLocationClient;
+	private static Location mCurrentLocation;
+	private static LocationClient mLocationClient;
 	private List<Region> mListregions;
+	private static Context context;
 
 	@Override
 	public void onCreate() {
 
 		notifiedBeacons = new ArrayList<IBeaconsFound>();
-
+		context=getApplicationContext();
 		this.options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).build();
 
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext()).defaultDisplayImageOptions(options).build();
 		this.imageLoader = ImageLoader.getInstance();
 		this.imageLoader.init(config);
-		this.mLocationClient = new LocationClient(this, this, this);
-		this.mLocationClient.connect();
+		mLocationClient = new LocationClient(this, this, this);
+		mLocationClient.connect();
 		// ********************* Configuracion de Beacons
 		// *************************
 		this.mBeaconManager = BeaconManager.getInstanceForApplication(this);
 		this.mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:0-3=4c000215,i:4-19,i:20-21,i:22-23,p:24-24")); // iBeacons
-
 		this.mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24")); // Estimotes
-
 		this.mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:0-3=a7ae2eb7,i:4-19,i:20-21,i:22-23,p:24-24")); // easiBeacons
 		setmBackgroundPowerSaver(new BackgroundPowerSaver(this));
-		this.mBeaconManager.setForegroundBetweenScanPeriod(6000);
+		this.mBeaconManager.setForegroundBetweenScanPeriod(5000);
 		this.mBeaconManager.setBackgroundBetweenScanPeriod(9000);
-//		Region region1 = new Region("myIdentifier1", null, Identifier.parse("1"), Identifier.parse("1"));        
-//		Region region2 = new Region("myIdentifier2", null, Identifier.parse("1"), Identifier.parse("2"));   
 
-//		try {
-//			mBeaconManager.startMonitoringBeaconsInRegion(region1);
-//			mBeaconManager.startMonitoringBeaconsInRegion(region2);   
-//		} catch (RemoteException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		this.mListregions=new ArrayList<Region>();
-		this.mListregions.add(new Region("myIdentifier1", null, Identifier.fromInt(1), Identifier.fromInt(1)));
-//		mListregions.add(new Region("myIdentifier2", null, Identifier.fromInt(1), Identifier.fromInt(2)));
-//		mListregions.add(new Region("myIdentifier3", null, Identifier.fromInt(1), Identifier.fromInt(3)));
-//		mListregions.add(new Region("myIdentifier4", null, Identifier.fromInt(1), Identifier.fromInt(4)));
-//		mListregions.add(new Region("myIdentifier5", null, Identifier.fromInt(1), Identifier.fromInt(5)));
-//		mListregions.add(new Region("myIdentifier6", null, Identifier.fromInt(1), Identifier.fromInt(6)));
+//		this.mListregions.add(new Region("myIdentifier1", null, Identifier.fromInt(1), Identifier.fromInt(1)));
+		mListregions.add(new Region("myIdentifier2", null, Identifier.fromInt(1), Identifier.fromInt(2)));
+		mListregions.add(new Region("myIdentifier3", null, Identifier.fromInt(1), Identifier.fromInt(3)));
+		mListregions.add(new Region("myIdentifier4", null, Identifier.fromInt(1), Identifier.fromInt(4)));
+		this.mListregions.add(new Region("myIdentifier5", null, Identifier.fromInt(1), Identifier.fromInt(5)));
+		mListregions.add(new Region("myIdentifier6", null, Identifier.fromInt(1), Identifier.fromInt(6)));
+		mListregions.add(new Region("myIdentifier7", null, Identifier.fromInt(1), Identifier.fromInt(7)));
 		mRegionBootstrap = new RegionBootstrap(this, mListregions);
 		
 		// super.onCreate();
@@ -137,7 +138,7 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 
 	public void refreshBeacon(Beacon beacon, Date date) {
 		for (int i = 0; i < notifiedBeacons.size(); i++) {
-			if (notifiedBeacons.get(i).getBeacon().equals(beacon) && this.notifiedBeacons.get(i).getDate().after(date)) {
+			if (notifiedBeacons.get(i).getBeacon().equals(beacon) && notifiedBeacons.get(i).getDate().after(date)) {
 				notifiedBeacons.remove(i);
 				notifiedBeacons.add(new IBeaconsFound(beacon, date));
 			}
@@ -163,43 +164,47 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 		boolean isNewRegion = isNewRegion(region);
 		if (isNewRegion) {
 			regionsFound.add(new RegionInfoDTO(region.getId2() != null ? region.getId2().toInt() : 0, region.getId3() != null ? region.getId3().toInt() : 0));
-			if (this.mainActivity != null) {
-				if(this.mLocationClient.isConnected()){
-					this.mCurrentLocation = this.mLocationClient.getLastLocation();
+				if(mLocationClient.isConnected()){
+					mCurrentLocation = mLocationClient.getLastLocation();
 				}else{
-					this.mLocationClient.connect();
+					mLocationClient.connect();
 				}
-//				mCurrentLocation = mLocationClient.getLastLocation();
-				this.mainActivity.didEnterRegion(regionsFound, this.mCurrentLocation);
-			} else {
-				// Comprobar is esta activo ubicacion o no. Intentar mandar
-				// notificacion si tenemos ubicacion activado. Si no tenemos
-				// activado ubicacin no mandaremos notificacion.
-				@SuppressWarnings("deprecation")
-				String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+				if(mCurrentLocation==null){
+					@SuppressWarnings("deprecation")
+					String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+				
+					if (locationProviders.contains("gps") || locationProviders.contains("network")) {
+						LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+						String locationProvider = LocationManager.NETWORK_PROVIDER;
+						mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
+				}
+				
+				}
+				
 
-				if (locationProviders.contains("gps") || locationProviders.contains("network")) {
-					LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-					String locationProvider = LocationManager.NETWORK_PROVIDER;
-					this.mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
-
-					if (this.mCurrentLocation != null&&Utils.getEstadoNotificacion(this)) {
-						new CheckPromocionesTask(this, regionsFound, String.valueOf(this.mCurrentLocation.getLatitude()), String.valueOf(this.mCurrentLocation.getLongitude())).execute();
+					if(buscarPromocionesActivity != null&&mCurrentLocation != null){
+						new CheckPromocionesTask(this, regionsFound, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
+	
+					}else if (mCurrentLocation != null&&Utils.getEstadoNotificacion(this)) {
+						new CheckPromocionesTask(this, regionsFound, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
 					}
-				}
-
-			}
+				
 		}
-
 	}
 
+	public  static void findPromociones(Location location){
+		if(regionsFound.size()>0){
+			mCurrentLocation=location;
+			new CheckPromocionesTask(context, regionsFound, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude())).execute();
+		}
+	}
 	public List<RegionInfoDTO> getRangeList() {
 		return regionsFound;
 	}
 
 	public boolean isNewRegion(Region region) {
 		Log.e("Beacon found", "Major: " + region.getId2() != null ? region.getId2().toString() : "null" + " Minor: " + region.getId3() != null ? region.getId3().toString() : "null");
-
+		Log.e("Region found ", "Major: " + region.getId2().toString() + " Minor: " + region.getId3().toString());
 		boolean exists = true;
 		for (RegionInfoDTO bi :regionsFound) {
 			if (bi.getMajor() == (region.getId2() != null ? region.getId2().toInt() : 0) && (region.getId3() != null ? region.getId3().toInt() : 0) == bi.getMinor()) {
@@ -211,17 +216,46 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 
 	@Override
 	public void didExitRegion(Region region) {
-		if (this.mainActivity != null) {
-			this.mainActivity.didExitRegion(region);
+		if (buscarPromocionesActivity != null) {
+//			En este caso primero borraremos el region despues mandaremos a redibujar las promociones encontradas en promocionesFragments
+			removePromocionOfRegion(region);
+			notifyDataSetChange();
+			
 		}else{
-			NotificationManager nManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-			for(int i=listOffer.size()-1;i>=0;i--){
-				if(listOffer.get(i).getMajor()==region.getId2().toInt()&&listOffer.get(i).getMinor()==region.getId3().toInt()){
-					nManager.cancel(listOffer.get(i).getOfferId());
-					listOffer.remove(i);
-				}
+			//Siempre primero quitar las notifiaciones despues borra las promociones de este region. Despues borraremos el rgion.
+			removeNotificacionOfRegion(region);
+			removePromocionOfRegion(region);
+		}
+	
+		removeRegionFromList(region);
+		
+	}
+	private static void notifyDataSetChange() {
+		final Activity activity = (Activity) buscarPromocionesActivity;
+		((Activity) activity).runOnUiThread(new Runnable() {
+    	    public void run() {
+    	    	PromocionesFragment.promotionsAdapter.notifyDataSetChanged();
+    	    }
+    	});
+	}
+	private void removeNotificacionOfRegion(Region region){
+		NotificationManager nManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+		for(int i=listOffer.size()-1;i>=0;i--){
+			if(listOffer.get(i).getMajor()==region.getId2().toInt()&&listOffer.get(i).getMinor()==region.getId3().toInt()){
+				nManager.cancel(listOffer.get(i).getOfferId());
 			}
 		}
+	}
+	
+	private void removePromocionOfRegion(Region region){
+		for(int i=listOffer.size()-1;i>=0;i--){
+			if(listOffer.get(i).getMajor()==region.getId2().toInt()&&listOffer.get(i).getMinor()==region.getId3().toInt()){
+				listOffer.remove(i);
+			}
+		}
+	}
+	
+	private void removeRegionFromList(Region region) {
 		Log.e("Region Exit ", "Major: " + region.getId2().toString() + " Minor: " + region.getId3().toString());
 		if (regionsFound != null && regionsFound.size() > 0) {
 			for (int i = 0; i < regionsFound.size(); i++) {
@@ -231,14 +265,93 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 			}
 
 		}
+	}
+	public static void agregarNuevoPromociones(ArrayList<OfferDetailsDTO> promociones){
+		boolean exists = false;
+		boolean nuevasPromociones=false;
+		for (OfferDetailsDTO promocionNuevo: promociones){
+			exists=false;
+	
+		for (OfferDetailsDTO offerGuardado : listOffer){
+			if (offerGuardado.equals(promocionNuevo)){
+				exists = true;
+				break;
+			}
+		}
+		if  (!exists){
+			listOffer.add(promocionNuevo);
+			nuevasPromociones=true;
+		}
 		
+		}
+		if(nuevasPromociones){
+			informarSobreNuevasPromociones();
+		}
+	}
+	
+	private static void informarSobreNuevasPromociones(){
+		if (buscarPromocionesActivity != null) {
+		
+//			PromocionesFragment.promotions=listOffer;
+			PromocionesFragment.promotionsAdapter.notifyDataSetChanged();
+		}else{
+			displayNotifiacion();
+		}
+	}
+	private static  void displayNotifiacion(){
+		if(listOffer!=null){
+			for (int i= 0; i<listOffer.size(); i++){
+				
+					if (listOffer.get(i)!=null){
+						OfferDetailsDTO nuevoPromocion = listOffer.get(i);
+
+						Intent targetIntent = null;
+						Notification noti = null;
+						NotificationManager nManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+						String notifTitle = null, notifText = null;
+						int notifSmallIcon = 0, notifId = 0;
+						Bitmap notifBigIcon = null;
+			
+						if (nuevoPromocion.getOfferType()!=2){
+							targetIntent = new Intent(Intent.ACTION_VIEW, Uri.parse( nuevoPromocion.getOfferURL()));
+							notifBigIcon = BitmapFactory.decodeResource(context.getResources(),R.drawable.logo_deusto);
+						} else {
+							targetIntent = new Intent(context, ImageActivity.class);
+							String web = nuevoPromocion.getOfferURL();
+							targetIntent.putExtra("image", web);
+							notifBigIcon = ((BeaconsApp) context.getApplicationContext()).getImageLoader().loadImageSync(nuevoPromocion.getOfferURL());
+						}
+			
+						notifTitle = nuevoPromocion.getName();
+//						BeaconsApp.listOffer.add(nuevoPromocion);
+
+						notifSmallIcon = R.drawable.ic_launcher;
+						notifId = nuevoPromocion.getOfferId();
+						PendingIntent contentIntent = PendingIntent.getActivity(context, 0, targetIntent, PendingIntent.FLAG_ONE_SHOT);
+						NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+							.setSmallIcon(notifSmallIcon)
+							.setContentTitle(notifTitle)
+							.setContentText(notifText)
+							.setOnlyAlertOnce(true)
+							.setAutoCancel(true)
+							.setDefaults(Notification.DEFAULT_ALL)
+							.setContentIntent(contentIntent)
+							.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(notifBigIcon));
+	 	  	
+						noti = mBuilder.build();
+						nManager.notify(notifId, noti);
+					}
+
+			}
+		}
 		
 	}
+	
 	public  void clearAllNotificaciones(){
 		NotificationManager nManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 		for(int i=listOffer.size()-1;i>=0;i--){
 				nManager.cancel(listOffer.get(i).getOfferId());
-				listOffer.remove(i);
+//				listOffer.remove(i);
 			}
 		
 	}
@@ -248,22 +361,21 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 
 	}
 
-	public Location getLocation() {
-		if(this.mLocationClient.isConnected()){
-			this.mCurrentLocation = this.mLocationClient.getLastLocation();
+	public static Location getLocation() {
+		if(mLocationClient.isConnected()){
+			mCurrentLocation = mLocationClient.getLastLocation();
 		}else{
-			this.mLocationClient.connect();
+			mLocationClient.connect();
 		}
 		
-		return this.mCurrentLocation;
+		return mCurrentLocation;
 	}
 
-	public void setLoginActivity(MainActivity activity) {
-		loginActivity = activity;
+	public static void setLocation(Location loc) {
+			mCurrentLocation = loc;
 	}
-
-	public void setMainActivity(BuscarPromocionesActivity activity) {
-		this.mainActivity = activity;
+	public void setBuscarPromocionesActivity(BuscarPromocionesActivity activity) {
+		buscarPromocionesActivity = activity;
 	}
 
 	@Override
@@ -274,43 +386,29 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		this.mCurrentLocation = mLocationClient.getLastLocation();
-		if (this.mainActivity != null) {
-			if(this.mLocationClient.isConnected()){
-				this.mCurrentLocation = this.mLocationClient.getLastLocation();
-			}else{
-				this.mLocationClient.connect();
-			}
-//			mCurrentLocation = mLocationClient.getLastLocation();
-			if(regionsFound!=null && regionsFound.size()>0){
-				this.mainActivity.didEnterRegion(regionsFound, this.mCurrentLocation);
-			}
-			
-		} else {
-			// Comprobar is esta activo ubicacion o no. Intentar mandar
-			// notificacion si tenemos ubicacion activado. Si no tenemos
-			// activado ubicacin no mandaremos notificacion.
+		if(mLocationClient.isConnected()){
+			mCurrentLocation = mLocationClient.getLastLocation();
+		}else{
+			mLocationClient.connect();
+		}
+		
+		if(mCurrentLocation==null){
 			@SuppressWarnings("deprecation")
 			String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-
 			if (locationProviders.contains("gps") || locationProviders.contains("network")) {
 				LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 				String locationProvider = LocationManager.NETWORK_PROVIDER;
-				this.mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
-
-				if (this.mCurrentLocation != null&&regionsFound!=null && regionsFound.size()>0&&Utils.getEstadoNotificacion(this)) {
-					new CheckPromocionesTask(this, regionsFound, String.valueOf(this.mCurrentLocation.getLatitude()), String.valueOf(this.mCurrentLocation.getLongitude())).execute();
-				}
+				mCurrentLocation = locationManager.getLastKnownLocation(locationProvider);
 			}
-
 		}
-//		this.mainActivity.didEnterRegion(null, this.mCurrentLocation);
-		//Buscar los promociones relacionadas con beacons ya encontradas. Tenemos beacons pero no teniamos location por eso volvemos a realizar peticion
-//		if(easiActivity!=null && list!=null&&list.size()>0) {
-//			easiActivity.obtnerPromocionesConLocalizacion(list,mCurrentLocation);
-//			
-//		}
-
+		
+		if(buscarPromocionesActivity != null&&regionsFound!=null && regionsFound.size()>0&&mCurrentLocation != null){
+			new CheckPromocionesTask(this, regionsFound, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
+		}else if (mCurrentLocation != null&&regionsFound!=null && regionsFound.size()>0&&Utils.getEstadoNotificacion(this)) {
+			new CheckPromocionesTask(this, regionsFound, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
+		}
+				
+		
 	}
 
 	@Override

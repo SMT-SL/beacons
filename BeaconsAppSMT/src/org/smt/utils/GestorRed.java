@@ -40,7 +40,7 @@ public class GestorRed {
 	private static final String registerUrl=	serverUrl+"UserManagement.svc/json/newUser";
 	private static final String recoverPasswordUrl=	serverUrl+"AutenticationManagement.svc/json/RequestNewPass";
 	private static final String deleteFromWalletUrl=	serverUrl+"UserManagement.svc/json/deleteOffer";
-	private static final String PromotionFromWalletUrl=	serverUrl+"UserManagement.svc/json/getUserOffers";
+	private static final String PromotionFromWalletUrl=	serverUrl+"UserManagement.svc/json/getWalletOffers";
 	private static final String changeUserPasswordUrl=	serverUrl+"AutenticationManagement.svc/json/ChangePass";
 	private static final String addToWalletUrl=	serverUrl+"UserManagement.svc/json/saveOffer";
 	private static final String modifyUserPerfilUrl=serverUrl+"UserManagement.svc/json/EditUser";

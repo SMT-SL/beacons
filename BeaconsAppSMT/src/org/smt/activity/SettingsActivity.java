@@ -1,9 +1,5 @@
 package org.smt.activity;
 
-
-
-
-
 import org.smt.R;
 
 import android.os.Bundle;
@@ -26,18 +22,12 @@ public class SettingsActivity extends PreferenceActivity {
 	}
 	@Override
 	protected void onPause() {
-//		if (saliendo){
-//			Intent i = new Intent(getApplicationContext(), BeaconsMonitoringService.class);
-//			startService(i);
-//		}
 		super.onPause();
 	}
 	
 	@Override
 	protected void onResume() {
 		saliendo = true;
-//		Intent i = new Intent(getApplicationContext(), BeaconsMonitoringService.class);
-//		stopService(i);
 		super.onResume();
 	}
 }

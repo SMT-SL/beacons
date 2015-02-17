@@ -8,11 +8,13 @@ import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 
 public class Utils {
 	/**
@@ -162,5 +164,22 @@ public class Utils {
 	public static Boolean getEstadoNotificacion(Context context){
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
 		return settings.getBoolean("Notificaciones", true);
+	}
+	
+	public static boolean isLocationActivado(Context context) {
+		@SuppressWarnings("deprecation")
+		String locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+		if (!locationProviders.contains("gps") && !locationProviders.contains("network")) {
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean isBloothActivated() {
+		BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+			return false;
+		}
+		return true;
 	}
 }
