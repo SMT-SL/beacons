@@ -10,7 +10,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.ImageView;
-
+/**
+ * Activity used to show image of promociones
+ * @author Azam-smt
+ *
+ */
 public class ImageActivity extends Activity {
 
 	@Override

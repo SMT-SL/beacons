@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconManager;
@@ -101,7 +103,9 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 		mListregions.add(new Region("myIdentifier7", null, Identifier.fromInt(1), Identifier.fromInt(7)));
 		mRegionBootstrap = new RegionBootstrap(this, mListregions);
 		
-		// super.onCreate();
+		Timer myTimerRegionExist = new Timer();
+		MyTimerRegionExitTask mytimerExitTask=new MyTimerRegionExitTask();
+		myTimerRegionExist.schedule(mytimerExitTask, 5000, 5000);
 	}
 
 	public boolean isAlreadyNotifiedBeacon(Beacon beacon, Date date) {
@@ -180,8 +184,6 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 				}
 				
 				}
-				
-
 					if(buscarPromocionesActivity != null&&mCurrentLocation != null){
 						new CheckPromocionesTask(this, regionsFound, String.valueOf(mCurrentLocation.getLatitude()), String.valueOf(mCurrentLocation.getLongitude())).execute();
 	
@@ -208,6 +210,7 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 		boolean exists = true;
 		for (RegionInfoDTO bi :regionsFound) {
 			if (bi.getMajor() == (region.getId2() != null ? region.getId2().toInt() : 0) && (region.getId3() != null ? region.getId3().toInt() : 0) == bi.getMinor()) {
+				bi.setExistedFromRegion(false);
 				exists = false;
 			}
 		}
@@ -216,18 +219,13 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 
 	@Override
 	public void didExitRegion(Region region) {
-		if (buscarPromocionesActivity != null) {
-//			En este caso primero borraremos el region despues mandaremos a redibujar las promociones encontradas en promocionesFragments
-			removePromocionOfRegion(region);
-			notifyDataSetChange();
-			
-		}else{
-			//Siempre primero quitar las notifiaciones despues borra las promociones de este region. Despues borraremos el rgion.
-			removeNotificacionOfRegion(region);
-			removePromocionOfRegion(region);
+		for (RegionInfoDTO bi :regionsFound) {
+			if (bi.getMajor() == (region.getId2() != null ? region.getId2().toInt() : 0) && (region.getId3() != null ? region.getId3().toInt() : 0) == bi.getMinor()) {
+				bi.setExistedFromRegion(true);
+				bi.setExistTime(System.currentTimeMillis());
+				
+			}
 		}
-	
-		removeRegionFromList(region);
 		
 	}
 	private static void notifyDataSetChange() {
@@ -238,28 +236,28 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
     	    }
     	});
 	}
-	private void removeNotificacionOfRegion(Region region){
+	private void removeNotificacionOfRegion(RegionInfoDTO region){
 		NotificationManager nManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 		for(int i=listOffer.size()-1;i>=0;i--){
-			if(listOffer.get(i).getMajor()==region.getId2().toInt()&&listOffer.get(i).getMinor()==region.getId3().toInt()){
+			if(listOffer.get(i).getMajor()==region.getMinor()&&listOffer.get(i).getMinor()==region.getMajor()){
 				nManager.cancel(listOffer.get(i).getOfferId());
 			}
 		}
 	}
 	
-	private void removePromocionOfRegion(Region region){
+	private void removePromocionOfRegion(RegionInfoDTO region){
 		for(int i=listOffer.size()-1;i>=0;i--){
-			if(listOffer.get(i).getMajor()==region.getId2().toInt()&&listOffer.get(i).getMinor()==region.getId3().toInt()){
+			if(listOffer.get(i).getMajor()==region.getMajor()&&listOffer.get(i).getMinor()==region.getMinor()){
 				listOffer.remove(i);
 			}
 		}
 	}
 	
-	private void removeRegionFromList(Region region) {
-		Log.e("Region Exit ", "Major: " + region.getId2().toString() + " Minor: " + region.getId3().toString());
+	private void removeRegionFromList(RegionInfoDTO region) {
+		Log.e("Region Exit ", "Major: " + region.getMajor() + " Minor: " + region.getMinor());
 		if (regionsFound != null && regionsFound.size() > 0) {
 			for (int i = 0; i < regionsFound.size(); i++) {
-				if (regionsFound.get(i).getMajor() == region.getId2().toInt() && region.getId3().toInt() == regionsFound.get(i).getMinor()) {
+				if (regionsFound.get(i).getMajor() == region.getMajor() && region.getMinor() == regionsFound.get(i).getMinor()) {
 					regionsFound.remove(i);
 				}
 			}
@@ -298,6 +296,7 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 			displayNotifiacion();
 		}
 	}
+	
 	private static  void displayNotifiacion(){
 		if(listOffer!=null){
 			for (int i= 0; i<listOffer.size(); i++){
@@ -411,6 +410,28 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 		
 	}
 
+	class MyTimerRegionExitTask extends TimerTask{
+
+		@Override
+		public void run() {
+			if(regionsFound!=null && !regionsFound.isEmpty())
+			for (RegionInfoDTO beaconRegion :regionsFound) {
+				if (beaconRegion.isExistedFromRegion() && (System.currentTimeMillis()-beaconRegion.getExistTime())>5000) {
+					if (buscarPromocionesActivity != null) {
+						//En este caso primero borraremos el region despues mandaremos a redibujar las promociones encontradas en promocionesFragments
+						removePromocionOfRegion(beaconRegion);
+						notifyDataSetChange();
+					}else{
+						//Siempre primero quitar las notifiaciones despues borra las promociones de este region. Despues borraremos el rgion.
+						removeNotificacionOfRegion(beaconRegion);
+						removePromocionOfRegion(beaconRegion);
+					}
+					removeRegionFromList(beaconRegion);
+				}
+			}
+		}
+		
+	}
 	@Override
 	public void onDisconnected() {
 		// TODO Auto-generated method stub

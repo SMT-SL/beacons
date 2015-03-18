@@ -27,7 +27,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.MediaController;
 import android.widget.VideoView;
-
+/**
+ * Activity used to show video included in promociones
+ * @author Azam-smt
+ *
+ */
 public class VideoActivity extends Activity {
 
 	VideoView videoView;

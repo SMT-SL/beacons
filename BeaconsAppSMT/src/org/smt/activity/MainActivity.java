@@ -13,6 +13,11 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 
+/**
+ * 
+ * @author Azam-smt
+ *
+ */
 public class MainActivity extends Activity {
 
 
