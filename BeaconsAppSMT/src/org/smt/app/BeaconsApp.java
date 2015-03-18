@@ -86,9 +86,9 @@ public class BeaconsApp extends Application implements BootstrapNotifier, RangeN
 		// ********************* Configuracion de Beacons
 		// *************************
 		this.mBeaconManager = BeaconManager.getInstanceForApplication(this);
-		this.mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:0-3=4c000215,i:4-19,i:20-21,i:22-23,p:24-24")); // iBeacons
-		this.mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24")); // Estimotes
-		this.mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:0-3=a7ae2eb7,i:4-19,i:20-21,i:22-23,p:24-24")); // easiBeacons
+		this.mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:0-3=4c000215,i:4-19,i:20-21,i:22-23,p:24")); // Estimotes
+		this.mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:0-3=a7ae2eb7,i:4-19,i:20-21,i:22-234-24")); // iBeacons
+		this.mBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-2,p:24-24")); // easiBeacons
 		setmBackgroundPowerSaver(new BackgroundPowerSaver(this));
 		this.mBeaconManager.setForegroundBetweenScanPeriod(5000);
 		this.mBeaconManager.setBackgroundBetweenScanPeriod(9000);
